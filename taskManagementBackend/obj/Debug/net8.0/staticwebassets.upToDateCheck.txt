@@ -1,0 +1,8 @@
+wwwroot\asset-manifest.json
+wwwroot\index.html
+wwwroot\manifest.json
+wwwroot\static\css\main.858de464.css
+wwwroot\static\css\main.858de464.css.map
+wwwroot\static\js\main.6804d761.js
+wwwroot\static\js\main.6804d761.js.LICENSE.txt
+wwwroot\static\js\main.6804d761.js.map
