@@ -1,6 +1,56 @@
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f9;
+    background-color: #FBFBFB; /* Off-white background */
     padding: 20px;
-}
+  }
+  
+  .app-container {
+    background-color: #FBFBFB; /* Off-white background for the main container */
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  .task-list {
+    margin-top: 20px;
+  }
+  
+  .task-item {
+    background-color: transparent; /* Removed color, set to transparent */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  button {
+    background-color: #4A628A !important;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-transform: none;
+  }
+  
+  button:hover {
+    background-color: #3A4F73 !important;
+  }
+  
+  /* Styling for the background of the text areas */
+  input, textarea, select {
+    background-color: transparent !important;
+  }
+  
+  input, textarea, select, button {
+    border-radius: 5px;
+  }
+  
+  h1, h2, h3, h4, h5, h6, p {
+    background-color: transparent;
+  }
+  

@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif; /* Updated to Material-UI font */
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -19,7 +19,7 @@ h1 {
 }
 
 button {
-    background-color: #007BFF;
+    background-color: #1976d2; /* Material-UI primary blue */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -28,7 +28,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #1565c0; /* Darker shade for hover */
 }
 
 .task-form {
