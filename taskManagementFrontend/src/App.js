@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchTasks, deleteTask } from "./api";
 import TaskForm from "./components/TaskForm";
+import Button from "@mui/material/Button";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -31,7 +32,13 @@ const App = () => {
         {tasks.map((task) => (
           <li key={task.id}>
             {task.title} - {task.status}
-            <button onClick={() => handleTaskDelete(task.id)}>Delete</button>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={() => handleTaskDelete(task.id)}
+            >
+              Delete
+            </Button>
           </li>
         ))}
       </ul>
