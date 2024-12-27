@@ -4,7 +4,7 @@
 This project provides a task management system built using React for the front-end and ASP.NET Core for the back-end. The front-end allows users to manage tasks (add, edit, delete, and view tasks) while the back-end handles API requests and interacts with a SQLite database.
 
 ## Technologies Used
-- **Frontend**: React, CSS
+- **Frontend**: React, CSS, Material UI
 - **Backend**: ASP.NET Core, SQLite
 - **Database**: SQLite
 
@@ -25,11 +25,11 @@ This project provides a task management system built using React for the front-e
    ```bash
    npm start
    ```
-   The frontend will be available at `http://localhost:7086`.
+   The frontend will be available at `http://localhost:3000`.
 
 ### Backend (ASP.NET Core)
 1. Open a terminal in the `TaskManagementBackend` directory.
-2. Ensure that you have .NET 6 or higher installed.
+2. Ensure that you have .NET 8.
 3. Run the following command to restore dependencies:
    ```bash
    dotnet restore
@@ -38,7 +38,7 @@ This project provides a task management system built using React for the front-e
    ```bash
    dotnet run
    ```
-   The backend will be available at `http://localhost:5106`.
+   The backend will be available at `https://localhost:7228`.
 
 ### Database
 The backend uses SQLite for storage, and the `TaskContext` is configured to use `tasks.db` as the database. The database will be created automatically upon the first run of the backend.
