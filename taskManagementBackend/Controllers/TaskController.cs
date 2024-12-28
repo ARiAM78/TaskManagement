@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
@@ -53,10 +53,16 @@ public class TasksController : ControllerBase
             return NotFound("Task not found.");
         }
 
+        // Update task properties
         existingTask.Title = task.Title;
         existingTask.Description = task.Description;
         existingTask.DueDate = task.DueDate;
-        existingTask.Status = task.Status;
+
+        // Only update status if it is provided
+        if (!string.IsNullOrEmpty(task.Status))
+        {
+            existingTask.Status = task.Status;
+        }
 
         await _context.SaveChangesAsync();
         return NoContent();
