@@ -1,41 +1,73 @@
 import React, { useState, useEffect } from "react";
-import { fetchTasks, deleteTask } from "./api";
+import { fetchTasks, updateTask, deleteTask } from "./api";
 import TaskForm from "./components/TaskForm";
+import { Button, Typography, Container } from "@mui/material";
+import "./index.css";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
 
-  const loadTasks = async () => {
+  useEffect(() => {
+    const getTasks = async () => {
+      const data = await fetchTasks();
+      setTasks(data);
+    };
+    getTasks();
+  }, []);
+
+  const handleTaskCreated = () => {
+    const getTasks = async () => {
+      const data = await fetchTasks();
+      setTasks(data);
+    };
+    getTasks();
+  };
+
+  const handleStatusChange = async (id, status) => {
+    await updateTask(id, { status });
     const data = await fetchTasks();
     setTasks(data);
   };
 
-  const handleTaskCreated = () => {
-    loadTasks();
-  };
-
-  const handleTaskDelete = async (id) => {
+  const handleDeleteTask = async (id) => {
     await deleteTask(id);
-    loadTasks();
+    const data = await fetchTasks();
+    setTasks(data);
   };
-
-  useEffect(() => {
-    loadTasks();
-  }, []);
 
   return (
-    <div>
-      <h1>Task Management</h1>
+    <Container maxWidth="sm" className="app-container">
+      <Typography variant="h4" gutterBottom>Task Management</Typography>
       <TaskForm onTaskCreated={handleTaskCreated} />
-      <ul>
+      <div className="task-list">
         {tasks.map((task) => (
-          <li key={task.id}>
-            {task.title} - {task.status}
-            <button onClick={() => handleTaskDelete(task.id)}>Delete</button>
-          </li>
+          <div key={task.id} className="task-item">
+            <Typography variant="h6">{task.title}</Typography>
+            <Typography variant="body1">{task.description}</Typography>
+            <Typography variant="body2">Due Date: {task.dueDate}</Typography>
+            <Typography variant="body2">Status: {task.status}</Typography>
+            <div className="task-actions">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleStatusChange(task.id, task.status === "Pending" ? "Completed" : "Pending")}
+                style={{ backgroundColor: '#4A628A', marginRight: '10px' }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleDeleteTask(task.id)}
+                style={{ backgroundColor: '#4A628A' }}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </Container>
   );
 };
 
