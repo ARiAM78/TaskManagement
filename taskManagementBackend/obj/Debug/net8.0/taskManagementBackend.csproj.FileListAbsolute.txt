@@ -158,3 +158,4 @@ C:\Users\Aryam\Desktop\TaskManagement\taskManagementBackend\bin\Debug\net8.0\tas
 C:\Users\Aryam\Desktop\TaskManagement\taskManagementBackend\bin\Debug\net8.0\taskManagementBackend.pdb
 C:\Users\Aryam\Desktop\TaskManagement\taskManagementBackend\obj\Debug\net8.0\taskManagementBackend.genruntimeconfig.cache
 C:\Users\Aryam\Desktop\TaskManagement\taskManagementBackend\obj\Debug\net8.0\ref\taskManagementBackend.dll
+C:\Users\Aryam\Desktop\TaskManagement\taskManagementBackend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

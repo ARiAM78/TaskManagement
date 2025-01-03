@@ -13,24 +13,24 @@
       "PackagePath": "staticwebassets\\manifest.json"
     },
     {
-      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\css\\main.858de464.css",
-      "PackagePath": "staticwebassets\\static\\css\\main.858de464.css"
+      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\css\\main.92da5d4c.css",
+      "PackagePath": "staticwebassets\\static\\css\\main.92da5d4c.css"
     },
     {
-      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\css\\main.858de464.css.map",
-      "PackagePath": "staticwebassets\\static\\css\\main.858de464.css.map"
+      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\css\\main.92da5d4c.css.map",
+      "PackagePath": "staticwebassets\\static\\css\\main.92da5d4c.css.map"
     },
     {
-      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.6804d761.js",
-      "PackagePath": "staticwebassets\\static\\js\\main.6804d761.js"
+      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.bbbd4588.js",
+      "PackagePath": "staticwebassets\\static\\js\\main.bbbd4588.js"
     },
     {
-      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.6804d761.js.LICENSE.txt",
-      "PackagePath": "staticwebassets\\static\\js\\main.6804d761.js.LICENSE.txt"
+      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.bbbd4588.js.LICENSE.txt",
+      "PackagePath": "staticwebassets\\static\\js\\main.bbbd4588.js.LICENSE.txt"
     },
     {
-      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.6804d761.js.map",
-      "PackagePath": "staticwebassets\\static\\js\\main.6804d761.js.map"
+      "Id": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.bbbd4588.js.map",
+      "PackagePath": "staticwebassets\\static\\js\\main.bbbd4588.js.map"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.taskManagementBackend.props",

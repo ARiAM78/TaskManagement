@@ -1,61 +1,88 @@
 import React, { useState } from "react";
-import { createTask, updateTask } from "../api"; // Ensure the updateTask function is imported from API
+import { createTask, updateTask } from "../api"; // Import API functions for creating and updating tasks
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 
 const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete }) => {
-  // Initialize taskDetails state. If taskToEdit exists, load its details; otherwise, use default values.
+  // Initialize state for task details. If editing, pre-fill with existing task data.
   const [taskDetails, setTaskDetails] = useState({
     title: taskToEdit ? taskToEdit.title : "",
     description: taskToEdit ? taskToEdit.description : "",
     dueDate: taskToEdit ? taskToEdit.dueDate : "",
-    status: taskToEdit ? taskToEdit.status : "Pending",
+    status: taskToEdit ? taskToEdit.status : "Pending", // Default status is "Pending"
   });
 
-  // Handle form input changes and update the corresponding state values
+  // Handle changes to input fields and update the taskDetails state.
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTaskDetails((prevDetails) => ({
       ...prevDetails,
-      [name]: value,
+      [name]: value, // Dynamically update the relevant field in the state
     }));
   };
 
-  // Handle form submission. If taskToEdit exists, update the task; otherwise, create a new task.
+  // Handle form submission for adding or editing a task.
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission behavior
     const { title, description, dueDate, status } = taskDetails;
 
-    if (taskToEdit) {
-      // If editing an existing task, call the updateTask function with the updated task data.
-      const updatedTask = { id: taskToEdit.id, title, description, dueDate, status };
-      const response = await updateTask(updatedTask);
+    // Validate that all required fields are filled
+    if (!title || !description || !dueDate) {
+      alert("Please fill all required fields!"); // Display an error message if validation fails
+      return;
+    }
 
-      if (response) {
-        // Once the task is updated successfully, call onEditComplete to close the form.
-        onEditComplete();
-      }
-    } else {
-      // If adding a new task, call the createTask function with the new task data.
-      const newTask = { title, description, dueDate, status };
-      const createdTask = await createTask(newTask);
+    try {
+      if (taskToEdit) {
+        // If editing an existing task
+        const updatedTask = { id: taskToEdit.id, title, description, dueDate, status };
+        
+        // Ensure the updateTask API function is properly called
+        const response = await updateTask(updatedTask);
 
-      if (createdTask) {
-        // Once the task is created successfully, call onTaskCreated to close the form.
-        onTaskCreated();
-        // Reset the form fields after successful task creation.
-        setTaskDetails({
-          title: "",
-          description: "",
-          dueDate: "",
-          status: "Pending",
-        });
+        if (response) {
+          alert("Task updated successfully!"); // Show success message
+          onEditComplete(); // Trigger callback to close the form
+        } else {
+          alert("Failed to update task!"); // Handle case where update failed
+        }
+      } else {
+        // If creating a new task
+        const newTask = { title, description, dueDate, status };
+        const createdTask = await createTask(newTask);
+
+        if (createdTask) {
+          alert("Task created successfully!"); // Show success message
+          onTaskCreated(); // Trigger callback to refresh task list
+          setTaskDetails({
+            // Reset form fields to default values
+            title: "",
+            description: "",
+            dueDate: "",
+            status: "Pending",
+          });
+        }
       }
+    } catch (error) {
+      // Handle errors during API calls
+      console.error("Error saving task:", error);
+      alert("An error occurred while saving the task. Please try again.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: 'auto', backgroundColor: '#FBFBFB', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-      <div style={{ marginBottom: '15px' }}>
+    <form
+      onSubmit={handleSubmit} // Attach the form submission handler
+      style={{
+        maxWidth: "500px",
+        margin: "auto",
+        backgroundColor: "#FBFBFB",
+        padding: "20px",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      {/* Input field for task title */}
+      <div style={{ marginBottom: "15px" }}>
         <TextField
           fullWidth
           label="Task Title"
@@ -64,11 +91,13 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete }) => {
           onChange={handleChange}
           required
           InputProps={{
-            style: { backgroundColor: 'transparent', borderRadius: '5px' }
+            style: { backgroundColor: "transparent", borderRadius: "5px" },
           }}
         />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+
+      {/* Input field for task description */}
+      <div style={{ marginBottom: "15px" }}>
         <TextField
           fullWidth
           label="Task Description"
@@ -77,11 +106,13 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete }) => {
           onChange={handleChange}
           required
           InputProps={{
-            style: { backgroundColor: 'transparent', borderRadius: '5px' }
+            style: { backgroundColor: "transparent", borderRadius: "5px" },
           }}
         />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+
+      {/* Input field for task due date */}
+      <div style={{ marginBottom: "15px" }}>
         <TextField
           fullWidth
           label="Due Date"
@@ -91,14 +122,16 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete }) => {
           onChange={handleChange}
           required
           InputLabelProps={{
-            shrink: true,
+            shrink: true, // Ensure the label stays visible for date inputs
           }}
           InputProps={{
-            style: { backgroundColor: 'transparent', borderRadius: '5px' }
+            style: { backgroundColor: "transparent", borderRadius: "5px" },
           }}
         />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+
+      {/* Dropdown for selecting task status */}
+      <div style={{ marginBottom: "15px" }}>
         <FormControl fullWidth>
           <InputLabel>Status</InputLabel>
           <Select
@@ -106,31 +139,46 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete }) => {
             value={taskDetails.status}
             onChange={handleChange}
             label="Status"
-            style={{ backgroundColor: 'transparent', borderRadius: '5px' }}
+            style={{ backgroundColor: "transparent", borderRadius: "5px" }}
           >
-            <MenuItem value="Pending" style={{ backgroundColor: '#FBFBFB' }}>Pending</MenuItem>
-            <MenuItem value="Completed" style={{ backgroundColor: '#FBFBFB' }}>Completed</MenuItem>
+            <MenuItem value="Pending">Pending</MenuItem>
+            <MenuItem value="Completed">Completed</MenuItem>
           </Select>
         </FormControl>
       </div>
-      <Button 
-        type="submit" 
-        variant="contained" 
-        color="primary" 
+
+      {/* Submit button for adding or editing tasks */}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
         fullWidth
-        style={{ backgroundColor: '#4A628A', color: 'white', borderRadius: '5px', padding: '10px 0', marginBottom: '10px' }}
-        onMouseOver={(e) => e.target.style.backgroundColor = '#3A4F73'}
-        onMouseOut={(e) => e.target.style.backgroundColor = '#4A628A'}
+        style={{
+          backgroundColor: "#4A628A",
+          color: "white",
+          borderRadius: "5px",
+          padding: "10px 0",
+          marginBottom: "10px",
+        }}
+        onMouseOver={(e) => (e.target.style.backgroundColor = "#3A4F73")} // Change color on hover
+        onMouseOut={(e) => (e.target.style.backgroundColor = "#4A628A")}
       >
-        {taskToEdit ? "Edit Task" : "Add Task"}
+        {taskToEdit ? "Edit Task" : "Add Task"} {/* Change button text based on the mode */}
       </Button>
+
+      {/* Cancel button for editing mode */}
       {taskToEdit && (
         <Button
-          onClick={() => onEditComplete()}
+          onClick={() => onEditComplete()} // Trigger callback to cancel editing
           variant="outlined"
           color="secondary"
           fullWidth
-          style={{ borderColor: '#4A628A', color: '#4A628A', borderRadius: '5px', padding: '10px 0' }}
+          style={{
+            borderColor: "#4A628A",
+            color: "white",
+            borderRadius: "5px",
+            padding: "10px 0",
+          }}
         >
           Cancel Edit
         </Button>

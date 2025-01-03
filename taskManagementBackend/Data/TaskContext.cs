@@ -2,7 +2,22 @@
 
 public class TaskContext : DbContext
 {
+    // Constructor to initialize the DbContext with the options passed from the Startup class
     public TaskContext(DbContextOptions<TaskContext> options) : base(options) { }
 
-    public DbSet<Task> Tasks { get; set; } // Tasks table
+    // DbSet representing the Tasks table in the database
+    public DbSet<Task> Tasks { get; set; }
+
+    // This method allows for additional configuration of the model
+    // such as setting relationships between tables, defining constraints, etc.
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder); // Call the base method
+
+        // Example: You can specify additional configurations here
+        // such as making sure some fields are required, setting maximum lengths, etc.
+        // For example:
+        // modelBuilder.Entity<Task>().Property(t => t.Title).IsRequired();
+        // modelBuilder.Entity<Task>().Property(t => t.Description).HasMaxLength(500);
+    }
 }
