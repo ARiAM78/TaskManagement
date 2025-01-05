@@ -47,25 +47,33 @@ public class TasksController : ControllerBase
             return BadRequest("Task ID mismatch");
         }
 
+        if (task == null || string.IsNullOrEmpty(task.Title) || string.IsNullOrEmpty(task.Description))
+        {
+            return BadRequest("Invalid task data. Please check the input fields.");
+        }
+
         var existingTask = await _context.Tasks.FindAsync(id);
         if (existingTask == null)
         {
             return NotFound("Task not found.");
         }
 
-        // Update task properties
+        // Update task properties, ensuring status is updated only if provided
         existingTask.Title = task.Title;
         existingTask.Description = task.Description;
         existingTask.DueDate = task.DueDate;
+        existingTask.Status = !string.IsNullOrEmpty(task.Status) ? task.Status : existingTask.Status;
 
-        // Only update status if it is provided
-        if (!string.IsNullOrEmpty(task.Status))
+        try
         {
-            existingTask.Status = task.Status;
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return StatusCode(500, "Error updating the task. Please try again.");
         }
 
-        await _context.SaveChangesAsync();
-        return NoContent();
+        return NoContent();  // Successful update, return 204 No Content status
     }
 
     // DELETE: api/tasks/{id}
