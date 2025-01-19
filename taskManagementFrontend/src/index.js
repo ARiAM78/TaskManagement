@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { CssBaseline } from '@mui/material'; // Added to apply Material-UI's baseline styles
+import './i18next';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
