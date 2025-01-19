@@ -24,6 +24,18 @@ public class TasksController : ControllerBase
         return Ok(tasks);
     }
 
+    // GET: api/tasks/{id}
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Task>> GetTaskById(int id)
+    {
+        var task = await _context.Tasks.FindAsync(id);
+        if (task == null)
+        {
+            return NotFound($"Task with ID {id} not found.");
+        }
+        return Ok(task);
+    }
+
     // POST: api/tasks
     [HttpPost]
     public async Task<ActionResult<Task>> PostTask(Task task)

@@ -9,9 +9,12 @@ public class TaskContext : DbContext
     public DbSet<Task> Tasks { get; set; }
 
     // This method allows for additional configuration of the model
-    // such as setting relationships between tables, defining constraints, etc.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder); // Call the base method
+
+        // Specify additional configurations here
+        modelBuilder.Entity<Task>().Property(t => t.Title).IsRequired();
+        modelBuilder.Entity<Task>().Property(t => t.Description).HasMaxLength(500);
     }
 }
