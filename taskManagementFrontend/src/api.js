@@ -14,6 +14,27 @@ export const fetchTasks = async () => {
   }
 };
 
+// Fetch a task by ID with error handling
+export const fetchTaskById = async (id) => {
+  try {
+    if (!id) {
+      throw new Error('Task ID is missing'); // Ensure the task ID is provided
+    }
+
+    const response = await fetch(`${API_URL}/${id}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch task'); // Handle failed fetch
+    }
+
+    const taskData = await response.json(); // Convert response to JSON
+    // Return the full task data so we can edit it properly
+    return taskData; 
+  } catch (error) {
+    console.error('Error fetching task by ID:', error); // Log any errors
+    throw error; // Rethrow the error for further handling
+  }
+};
+
 // Create a new task with error handling
 export const createTask = async (task) => {
   try {
@@ -64,13 +85,13 @@ export const deleteTask = async (id) => {
       throw new Error('Task ID is missing');  // Ensure the task ID is provided
     }
 
-    const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    });
     if (!response.ok) {
-      throw new Error('Failed to delete task');  // Handle failed deletion
+      throw new Error('Failed to delete task'); // Handle failed delete
     }
-
-    // Handle empty response for 200 (successful deletion)
-    return response.status === 200 ? {} : await response.json();  
+    return response.json(); // Return confirmation of deletion
   } catch (error) {
     console.error('Error deleting task:', error);  // Log any errors
     throw error;  // Rethrow the error for further handling
