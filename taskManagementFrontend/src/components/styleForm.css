@@ -90,4 +90,35 @@
   body[dir="rtl"] .task-item {
     text-align: right;
   }
+  .task-item {
+    position: relative;
+  }
   
+  .task-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .save-all-button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px;
+    background-color: #4A628A;
+    color: white;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .save-all-button:hover {
+    background-color: #3A4F73;
+  }
+  
+  .task-item button {
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .task-item button:hover {
+    background-color: #3e5c78;
+  }
