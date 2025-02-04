@@ -13,4 +13,8 @@ i18n.use(initReactI18next).init({
   interpolation: { escapeValue: false }, // React escapes by default
 });
 
+<<<<<<< HEAD
 export default i18n;
+=======
+export default i18n;
+>>>>>>> f026b913190b8260536db58d1f540ca307ad751c

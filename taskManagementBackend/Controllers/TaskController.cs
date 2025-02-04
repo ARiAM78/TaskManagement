@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,6 +24,18 @@ public class TasksController : ControllerBase
             return NotFound("No tasks found.");
         }
         return Ok(tasks);
+    }
+
+    // GET: api/tasks/{id}
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Task>> GetTaskById(int id)
+    {
+        var task = await _context.Tasks.FindAsync(id);
+        if (task == null)
+        {
+            return NotFound($"Task with ID {id} not found.");
+        }
+        return Ok(task);
     }
 
     // POST: api/tasks
