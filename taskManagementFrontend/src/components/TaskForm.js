@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Snackbar, Alert } from "@mui/material";
+import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Snackbar, Alert, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import "./styleForm.css";
+import "./style.css";
 
-const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask }) => {
+const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, userRole }) => {
   const { t } = useTranslation();
   const [task, setTask] = useState({
     title: "",
     description: "",
     dueDate: "",
     status: "Pending",
+    entityId: "", // Added EntityId
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -28,6 +29,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask }) =
       description: "",
       dueDate: "",
       status: "Pending",
+      entityId: "", // Reset EntityId
     });
   };
 
@@ -41,7 +43,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask }) =
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!task.title || !task.description || !task.dueDate) {
+    if (!task.title || !task.description || !task.dueDate || !task.entityId) {
       setSnackbarMessage("All fields are required!");
       setOpenSnackbar(true);
       return;
@@ -69,6 +71,15 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask }) =
 
   return (
     <>
+      <Typography
+        variant="h5"
+        align="center"
+        gutterBottom
+        className="task-management-title"
+      >
+        Task Management
+      </Typography>
+
       <form className="task-form" onSubmit={handleSubmit}>
         <TextField
           label={t("title")}
@@ -124,7 +135,6 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask }) =
           {taskToEdit ? t("update Task") : t("add Task")}
         </Button>
 
-        {/*Cancel Update*/}
         {taskToEdit && (
           <Button
             variant="contained"

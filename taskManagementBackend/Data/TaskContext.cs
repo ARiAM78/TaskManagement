@@ -16,5 +16,8 @@ public class TaskContext : DbContext
         // Specify additional configurations here
         modelBuilder.Entity<Task>().Property(t => t.Title).IsRequired();
         modelBuilder.Entity<Task>().Property(t => t.Description).HasMaxLength(500);
+
+        // Configuration for EntityId
+        modelBuilder.Entity<Task>().Property(t => t.EntityId).IsRequired(); // Ensure EntityId is required
     }
 }

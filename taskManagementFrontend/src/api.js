@@ -1,99 +1,130 @@
 const API_URL = "https://localhost:7228/api/tasks"; // Backend API URL for tasks
 
-// Fetch all tasks with error handling
-export const fetchTasks = async () => {
+// Fetch all tasks or filter by EntityId
+export const fetchTasks = async (entityId = null) => {
   try {
-    const response = await fetch(API_URL);
+    const url = entityId ? `${API_URL}?entityId=${entityId}` : API_URL;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) {
-      throw new Error('Network response was not ok'); // Handle network errors
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to fetch tasks");
     }
-    return await response.json();  // Convert response to JSON
+
+    return await response.json();
   } catch (error) {
-    console.error('Error fetching tasks:', error);  // Log any errors
-    throw error;  // Rethrow the error for further handling in the component
+    console.error("Error fetching tasks:", error);
+    throw error;
   }
 };
 
-// Fetch a task by ID with error handling
+// Fetch a task by ID
 export const fetchTaskById = async (id) => {
   try {
     if (!id) {
-      throw new Error('Task ID is missing'); // Ensure the task ID is provided
+      throw new Error("Task ID is required.");
     }
 
-    const response = await fetch(`${API_URL}/${id}`);
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) {
-      throw new Error('Failed to fetch task'); // Handle failed fetch
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to fetch task");
     }
 
-    const taskData = await response.json(); // Convert response to JSON
-    // Return the full task data so we can edit it properly
-    return taskData; 
+    return await response.json();
   } catch (error) {
-    console.error('Error fetching task by ID:', error); // Log any errors
-    throw error; // Rethrow the error for further handling
+    console.error("Error fetching task by ID:", error);
+    throw error;
   }
 };
 
-// Create a new task with error handling
+// Create a new task with EntityId
 export const createTask = async (task) => {
   try {
+    if (!task.title || !task.description || !task.dueDate || !task.entityId) {
+      throw new Error("All fields (title, description, dueDate, entityId) are required.");
+    }
+
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(task),  // Send the task as JSON
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
     });
+
     if (!response.ok) {
-      throw new Error('Failed to create task'); // Handle failed creation
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to create task");
     }
-    return await response.json();  // Return the created task
+
+    return await response.json();
   } catch (error) {
-    console.error('Error creating task:', error);  // Log any errors
-    throw error;  // Rethrow the error for further handling
+    console.error("Error creating task:", error);
+    throw error;
   }
 };
 
-// Update an existing task with error handling
+// Update an existing task
 export const updateTask = async (updatedTask) => {
   try {
     if (!updatedTask.id) {
-      throw new Error('Task ID is missing');  // Ensure the task ID is provided
+      throw new Error("Task ID is required for update.");
     }
 
     const response = await fetch(`${API_URL}/${updatedTask.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedTask),  // Send updated task as JSON
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedTask),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update task'); // Handle failed update
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to update task");
     }
 
-    // Handle empty response for 204 (no content)
-    return response.status === 204 ? {} : await response.json();  
+    return response.status === 204 ? {} : await response.json();
   } catch (error) {
-    console.error('Error updating task:', error);  // Log any errors
-    throw error;  // Rethrow the error for further handling
+    console.error("Error updating task:", error);
+    throw error;
   }
 };
 
-// Delete a task with error handling
+// Delete a task
 export const deleteTask = async (id) => {
   try {
     if (!id) {
-      throw new Error('Task ID is missing');  // Ensure the task ID is provided
+      throw new Error("Task ID is required for deletion.");
     }
 
     const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
-    if (!response.ok) {
-      throw new Error('Failed to delete task'); // Handle failed delete
+
+    if (!response.ok && response.status !== 204) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to delete task");
     }
-    return response.json(); // Return confirmation of deletion
+
+    return {};
   } catch (error) {
-    console.error('Error deleting task:', error);  // Log any errors
-    throw error;  // Rethrow the error for further handling
+    console.error("Error deleting task:", error);
+    throw error;
   }
 };
