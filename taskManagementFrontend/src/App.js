@@ -1,71 +1,148 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask } from "./api";
 import TaskForm from "./components/TaskForm";
-import TaskItem from "./components/TaskItem"; 
-import { Typography, Container } from "@mui/material";
+import TaskItem from "./components/TaskItem";
 import SideMenu from "./components/SideMenu";
+import { Typography, Container, Button, CircularProgress, Snackbar, Alert } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
 import "./index.css";
 import "./i18next";
-=======
-import { fetchTasks, fetchTaskById, updateTask, deleteTask } from "./api";
-import TaskForm from "./components/TaskForm";
-import { Button, Typography, Container } from "@mui/material";
-import SideMenu from "./components/SideMenu";
-import { useTranslation } from 'react-i18next'; 
-import "./index.css";
-import './i18next';
->>>>>>> f026b913190b8260536db58d1f540ca307ad751c
+import "./components/style.css";
+
+// LoginPage Component for user selection with translation
+const LoginPage = ({ setUserRole }) => {
+  const { t } = useTranslation();
+  return (
+    <Container maxWidth="sm" className="app-container">
+      <Typography variant="h4" gutterBottom>
+        {t("selectAUser")}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{ marginBottom: "1rem" }}
+        onClick={() => setUserRole("admin")}
+      >
+        {t("admin")}
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{ marginBottom: "1rem" }}
+        onClick={() => setUserRole("user1")}
+      >
+        {t("user1")}
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        onClick={() => setUserRole("user2")}
+      >
+        {t("user2")}
+      </Button>
+    </Container>
+  );
+};
 
 const App = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
+
+  // State for logged in user role; if null, user is not logged in
+  const [userRole, setUserRole] = useState(null);
+
+  // State for tasks and editing mode
   const [tasks, setTasks] = useState([]);
   const [taskToEdit, setTaskToEdit] = useState(null);
+
+  // States for loading and error handling
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  // Additional states for language, side menu and selected entity
   const [lang, setLang] = useState("en");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState("");
 
-<<<<<<< HEAD
-  // Fetch tasks when the component mounts
-=======
-  // Fetch tasks when component mounts
->>>>>>> f026b913190b8260536db58d1f540ca307ad751c
+  // Snackbar close handler
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  // Fetch tasks when component mounts or when the selected entity changes
   useEffect(() => {
+    if (!userRole) return; // Don't fetch tasks if not logged in
     const getTasks = async () => {
+      setLoading(true);
       try {
-        const data = await fetchTasks();
+        const data = await fetchTasks(selectedEntity);
         setTasks(data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
+      } catch (err) {
+        setError(t("errorFetchingTasks") + " " + err.message);
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
       }
     };
     getTasks();
-  }, []);
+  }, [selectedEntity, userRole, t]);
 
-<<<<<<< HEAD
-  // Handle task creation (Add New Task)
+  // Automatically set the selected entity based on the logged in user (if not admin)
+  useEffect(() => {
+    if (!userRole) return;
+    if (userRole.toLowerCase() !== "admin") {
+      const mapping = {
+        user1: "1",
+        user2: "2"
+      };
+      setSelectedEntity(mapping[userRole.toLowerCase()] || "");
+    }
+  }, [userRole]);
+
+  // Handle task creation
   const handleTaskCreated = async (task) => {
     try {
-      // eslint-disable-next-line no-unused-vars
-      const newTask = await createTask(task);
-      const updatedTasks = await fetchTasks();
+      // Automatically assign entityId for non-admin users
+      if (userRole.toLowerCase() !== "admin") {
+        const mapping = {
+          user1: "1",
+          user2: "2"
+        };
+        task.entityId = mapping[userRole.toLowerCase()] || "";
+      }
+      // Validate required fields
+      if (!task.title || !task.description || !task.dueDate || !task.entityId) {
+        setError(t("allFieldsRequired"));
+        setSnackbarOpen(true);
+        return;
+      }
+      await createTask(task);
+      const updatedTasks = await fetchTasks(selectedEntity);
       setTasks(updatedTasks);
-    } catch (error) {
-      console.error("Failed to create task:", error);
-      alert("Error creating the task. Please try again.");
+    } catch (err) {
+      setError(t("failedCreateTask") + " " + err.message);
+      setSnackbarOpen(true);
     }
   };
 
   // Handle task update
   const handleTaskUpdate = async (updatedTask) => {
     try {
+      if (!updatedTask.id) {
+        setError(t("taskIdRequiredUpdate"));
+        setSnackbarOpen(true);
+        return;
+      }
       await updateTask(updatedTask);
-      const data = await fetchTasks();
+      const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      console.error("Failed to update task:", error);
-      alert("Error updating the task. Please try again.");
+    } catch (err) {
+      setError(t("failedUpdateTask") + " " + err.message);
+      setSnackbarOpen(true);
     }
   };
 
@@ -74,74 +151,50 @@ const App = () => {
     try {
       const task = await fetchTaskById(taskId);
       setTaskToEdit(task);
-    } catch (error) {
-      console.error("Error fetching task for editing:", error);
+    } catch (err) {
+      setError(t("errorFetchingTaskEdit") + " " + err.message);
+      setSnackbarOpen(true);
     }
   };
 
   // Clears editing mode after updating
-=======
-  // Update task list after creating a new task
-  const handleTaskCreated = (newTask) => {
-    const addTask = async () => {
-      await updateTask(newTask); // Assuming you add tasks via API
-      const data = await fetchTasks();
-      setTasks(data);
-    };
-    addTask();
-  };
-
-  // Fetch task for editing
-  const handleTaskEdit = async (taskId) => {
-    try {
-      const task = await fetchTaskById(taskId);
-      setTaskToEdit(task); 
-    } catch (error) {
-      console.error("Error fetching task for editing:", error);
-    }
-  };
-
-  // Clear task to edit after editing is complete
->>>>>>> f026b913190b8260536db58d1f540ca307ad751c
   const handleEditComplete = () => {
     setTaskToEdit(null);
   };
 
-<<<<<<< HEAD
   // Toggle task status
   const handleStatusChange = async (taskId, status) => {
     try {
-      const updatedTask = tasks.find((task) => task.id === taskId);
-      if (updatedTask) {
-        updatedTask.status = status;
-        await updateTask(updatedTask);
-        const data = await fetchTasks();
-        setTasks(data);
+      const task = tasks.find((t) => t.id === taskId);
+      if (!task) {
+        setError(t("taskNotFound"));
+        setSnackbarOpen(true);
+        return;
       }
-    } catch (error) {
-      console.error("Error updating task status:", error);
-=======
-  // Change status of a task
-  const handleStatusChange = async (taskId, status) => {
-    const updatedTask = tasks.find((task) => task.id === taskId);
-    if (updatedTask) {
-      updatedTask.status = status;
+      const updatedTask = { ...task, status };
       await updateTask(updatedTask);
-      const data = await fetchTasks();
+      const data = await fetchTasks(selectedEntity);
       setTasks(data);
->>>>>>> f026b913190b8260536db58d1f540ca307ad751c
+    } catch (err) {
+      setError(t("errorUpdatingStatus") + " " + err.message);
+      setSnackbarOpen(true);
     }
   };
 
   // Delete a task
   const handleDeleteTask = async (id) => {
-<<<<<<< HEAD
     try {
+      if (!id) {
+        setError(t("taskIdRequiredDeletion"));
+        setSnackbarOpen(true);
+        return;
+      }
       await deleteTask(id);
-      const data = await fetchTasks();
+      const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      console.error("Error deleting task:", error);
+    } catch (err) {
+      setError(t("errorDeletingTask") + " " + err.message);
+      setSnackbarOpen(true);
     }
   };
 
@@ -149,159 +202,105 @@ const App = () => {
   const shareTask = async (task) => {
     try {
       const doc = new jsPDF();
-      
-      // Add task details to the PDF
       doc.text(`Title: ${task.title}`, 10, 20);
       doc.text(`Description: ${task.description}`, 10, 30);
-      doc.text(`Due Date: ${task.dueDate ? task.dueDate.split("T")[0] : "N/A"}`, 10, 40);
+      doc.text(
+        `Due Date: ${task.dueDate ? task.dueDate.split("T")[0] : "N/A"}`,
+        10,
+        40
+      );
       doc.text(`Status: ${task.status}`, 10, 50);
-
-      // Generate PDF as Blob
-      const pdfBlob = doc.output("blob");
-
-      // Convert Blob to Object URL
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-
-      // Create a temporary download link (for user convenience)
-      const downloadLink = document.createElement("a");
-      downloadLink.href = pdfUrl;
-      downloadLink.download = `${task.title}.pdf`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-
-      // Construct WhatsApp message (compact version)
-      const message = `*Task Details:*\n`
-        + `*Title:* ${task.title}\n`
-        + `*Due Date:* ${task.dueDate ? task.dueDate.split("T")[0] : "N/A"}\n`
-        + `*Status:* ${task.status}\n\n`
-        + `*Download PDF:* ${pdfUrl}`;
-
-      // Generate WhatsApp sharing URL
-      const whatsappUrl = `https://wa.me/966582144870?text=${encodeURIComponent(message)}`;
-
-      // Open WhatsApp link
+      const pdfDataUri = doc.output("dataurlstring");
+      const message =
+        `*Task Details:*\n` +
+        `*Title:* ${task.title}\n` +
+        `*Due Date:* ${task.dueDate ? task.dueDate.split("T")[0] : "N/A"}\n` +
+        `*Status:* ${task.status}\n\n` +
+        `*Download PDF:* ${pdfDataUri}`;
+      const whatsappUrl = `https://wa.me/966582144870?text=${encodeURIComponent(
+        message
+      )}`;
       window.open(whatsappUrl, "_blank");
-
-      // Clean up Blob URL after 30 seconds (to prevent memory leaks)
-      setTimeout(() => {
-        URL.revokeObjectURL(pdfUrl);
-      }, 30000);
     } catch (error) {
       console.error("Error sharing task:", error);
-      alert("Failed to share task via WhatsApp.");
+      setError("Failed to share task via WhatsApp: " + error.message);
+      setSnackbarOpen(true);
     }
-=======
-    await deleteTask(id);
-    const data = await fetchTasks();
-    setTasks(data);
   };
 
-  // Toggle between English and Arabic languages
-  const toggleLanguage = () => {
-    const newLang = lang === "en" ? "ar" : "en";
-    setLang(newLang);
-    i18n.changeLanguage(newLang); 
-    document.body.dir = newLang === "ar" ? "rtl" : "ltr"; 
-  };
+  // If user is not logged in, show the LoginPage
+  if (!userRole) {
+    return <LoginPage setUserRole={setUserRole} />;
+  }
 
-  // Toggle side menu visibility
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
->>>>>>> f026b913190b8260536db58d1f540ca307ad751c
-  };
-
+  // Main Task Management Page (when user is logged in)
   return (
-    <Container maxWidth="sm" className="app-container">
-<<<<<<< HEAD
-      <SideMenu
-        menuOpen={menuOpen}
-        toggleMenu={() => setMenuOpen(!menuOpen)}
-        toggleLanguage={() => {
-          const newLang = lang === "en" ? "ar" : "en";
-          setLang(newLang);
-          i18n.changeLanguage(newLang);
-          document.body.dir = newLang === "ar" ? "rtl" : "ltr";
-        }}
-        lang={lang}
-      />
-      <Typography variant="h4" gutterBottom>
-        {i18n.t("taskManagement")}
-      </Typography>
-      <TaskForm
-        onTaskCreated={handleTaskCreated} // Ensures adding new tasks
-        taskToEdit={taskToEdit}
-        onEditComplete={handleEditComplete}
-        onUpdateTask={handleTaskUpdate} // Pass handleTaskUpdate correctly
-      />
-      <div className="task-list">
-        {tasks.length > 0 && tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onEdit={handleTaskEdit}
-            onDelete={handleDeleteTask}
-            onStatusChange={handleStatusChange}
-            onShareTask={shareTask}
-          />
-=======
-      <SideMenu menuOpen={menuOpen} toggleMenu={toggleMenu} toggleLanguage={toggleLanguage} lang={lang} />
+    <>
+      <Container maxWidth="sm" className="app-container">
+        <SideMenu
+          menuOpen={menuOpen}
+          toggleMenu={() => setMenuOpen(!menuOpen)}
+          toggleLanguage={() => {
+            const newLang = lang === "en" ? "ar" : "en";
+            setLang(newLang);
+            i18n.changeLanguage(newLang);
+            document.body.dir = newLang === "ar" ? "rtl" : "ltr";
+          }}
+          lang={lang}
+          userRole={userRole}
+          onLogout={() => setUserRole(null)}
+        />
 
-      <Typography variant="h4" gutterBottom>{i18n.t('taskManagement')}</Typography>
+        {/* Show entity selection dropdown only for Admin */}
+        {userRole.toLowerCase() === "admin" && (
+          <select
+            onChange={(e) => setSelectedEntity(e.target.value)}
+            className="form-field"
+            value={selectedEntity}
+          >
+            <option value="">{t("allTasks")}</option>
+            <option value="1">{t("user1")}</option>
+            <option value="2">{t("user2")}</option>
+          </select>
+        )}
 
-      {/* Task form */}
-      <TaskForm 
-        onTaskCreated={handleTaskCreated} 
-        taskToEdit={taskToEdit} 
-        onEditComplete={handleEditComplete} 
-      />
+        {/* Task Form */}
+        <TaskForm
+          onTaskCreated={handleTaskCreated}
+          taskToEdit={taskToEdit}
+          onEditComplete={handleEditComplete}
+          onUpdateTask={handleTaskUpdate}
+          userRole={userRole}
+        />
 
-      {/* List of tasks */}
-      <div className="task-list">
-        {tasks.map((task) => (
-          <div key={task.id} className="task-item">
-            <Typography variant="h6">{task.title}</Typography>
-            <Typography variant="body1">{task.description}</Typography>
-            <Typography variant="body2">{i18n.t('dueDate')}: {task.dueDate.split('T')[0]}</Typography>
-            <Typography variant="body2">{i18n.t('status')}: {i18n.t(task.status === 'Pending' ? 'pending' : 'completed')}</Typography>
-
-            <div className="task-actions">
-              {/* Edit and Delete buttons on the same row */}
-              <div className="edit-delete-buttons">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleTaskEdit(task.id)}
-                  className="full-width-button"
-                >
-                  {i18n.t('edit')}
-                </Button>
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleDeleteTask(task.id)}
-                  className="full-width-button"
-                >
-                  {i18n.t('delete')}
-                </Button>
-              </div>
-
-              {/* Change status button */}
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleStatusChange(task.id, task.status === 'Pending' ? 'Completed' : 'Pending')}
-                className="full-width-button"
-              >
-                {task.status === 'Pending' ? i18n.t('Completed') : i18n.t('Pending')}
-              </Button>
-            </div>
+        {/* Task List */}
+        {loading ? (
+          <CircularProgress />
+        ) : tasks.length > 0 ? (
+          <div className="task-list">
+            {tasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onEdit={handleTaskEdit}
+                onDelete={handleDeleteTask}
+                onStatusChange={handleStatusChange}
+                onShareTask={shareTask}
+              />
+            ))}
           </div>
->>>>>>> f026b913190b8260536db58d1f540ca307ad751c
-        ))}
-      </div>
-    </Container>
+        ) : (
+          <Typography variant="body1">{t("noTasksAvailable")}</Typography>
+        )}
+
+        {/* Snackbar for error messages */}
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+          <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: "100%" }}>
+            {error}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </>
   );
 };
 

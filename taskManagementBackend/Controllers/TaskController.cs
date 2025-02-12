@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 [Route("api/[controller]")]
@@ -14,16 +16,31 @@ public class TasksController : ControllerBase
         _context = context;
     }
 
-    // GET: api/tasks
+    // GET: api/tasks (Get all tasks or filter by EntityId)
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Task>>> GetTasks()
+    public async Task<ActionResult<IEnumerable<Task>>> GetTasks([FromQuery] int? entityId)
     {
-        var tasks = await _context.Tasks.ToListAsync();
-        if (tasks == null || tasks.Count == 0)
+        try
         {
-            return NotFound("No tasks found.");
+            if (entityId.HasValue)
+            {
+                var filteredTasks = await _context.Tasks
+                    .Where(t => t.EntityId == entityId.Value)
+                    .ToListAsync();
+
+                if (filteredTasks.Count == 0)
+                    return NotFound($"No tasks found for EntityId {entityId.Value}.");
+
+                return Ok(filteredTasks);
+            }
+
+            var allTasks = await _context.Tasks.ToListAsync();
+            return Ok(allTasks);
         }
-        return Ok(tasks);
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while fetching tasks: {ex.Message}");
+        }
     }
 
     // GET: api/tasks/{id}
@@ -31,77 +48,77 @@ public class TasksController : ControllerBase
     public async Task<ActionResult<Task>> GetTaskById(int id)
     {
         var task = await _context.Tasks.FindAsync(id);
-        if (task == null)
-        {
-            return NotFound($"Task with ID {id} not found.");
-        }
+        if (task == null) return NotFound($"Task with ID {id} not found.");
+
         return Ok(task);
     }
 
-    // POST: api/tasks
+    // POST: api/tasks (Create a new task)
     [HttpPost]
     public async Task<ActionResult<Task>> PostTask(Task task)
     {
-        if (task == null)
-        {
-            return BadRequest("Task cannot be null.");
-        }
-
-        _context.Tasks.Add(task);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(PostTask), new { id = task.Id }, task);
-    }
-
-    // PUT: api/tasks/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutTask(int id, Task task)
-    {
-        if (id != task.Id)
-        {
-            return BadRequest("Task ID mismatch");
-        }
-
-        if (task == null || string.IsNullOrEmpty(task.Title) || string.IsNullOrEmpty(task.Description))
-        {
-            return BadRequest("Invalid task data. Please check the input fields.");
-        }
-
-        var existingTask = await _context.Tasks.FindAsync(id);
-        if (existingTask == null)
-        {
-            return NotFound("Task not found.");
-        }
-
-        // Update task properties, ensuring status is updated only if provided
-        existingTask.Title = task.Title;
-        existingTask.Description = task.Description;
-        existingTask.DueDate = task.DueDate;
-        existingTask.Status = !string.IsNullOrEmpty(task.Status) ? task.Status : existingTask.Status;
-
         try
         {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            return StatusCode(500, "Error updating the task. Please try again.");
-        }
+            if (task == null || task.EntityId == 0)
+                return BadRequest("Task must have a valid EntityId.");
 
-        return NoContent();  // Successful update, return 204 No Content status
+            if (string.IsNullOrEmpty(task.Title) || string.IsNullOrEmpty(task.Description) || task.DueDate == default)
+                return BadRequest("All required fields must be provided.");
+
+            _context.Tasks.Add(task);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetTaskById), new { id = task.Id }, task);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
+    }
+
+    // PUT: api/tasks/{id} (Update a task)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutTask(int id, Task updatedTask)
+    {
+        try
+        {
+            if (id != updatedTask.Id)
+                return BadRequest("Task ID mismatch.");
+
+            var task = await _context.Tasks.FindAsync(id);
+            if (task == null) return NotFound("Task not found.");
+
+            task.Title = updatedTask.Title;
+            task.Description = updatedTask.Description;
+            task.DueDate = updatedTask.DueDate;
+            task.Status = updatedTask.Status;
+            task.EntityId = updatedTask.EntityId;
+
+            await _context.SaveChangesAsync();
+            return Ok(task);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 
     // DELETE: api/tasks/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTask(int id)
     {
-        var task = await _context.Tasks.FindAsync(id);
-        if (task == null)
+        try
         {
-            return NotFound("Task not found.");
-        }
+            var task = await _context.Tasks.FindAsync(id);
+            if (task == null) return NotFound("Task not found.");
 
-        _context.Tasks.Remove(task);
-        await _context.SaveChangesAsync();
-        return NoContent();
+            _context.Tasks.Remove(task);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 }
