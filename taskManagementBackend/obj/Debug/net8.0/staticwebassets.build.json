@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "d1jVsSr3cZf2eMxv0sTgjuvdu/G7N1MMUG+Jpb0NgQo=",
+  "Hash": "5hoZa1Z8INI8so9ORV/JTvMOA6xsA3Dy6uDIQWM60rE=",
   "Source": "taskManagementBackend",
   "BasePath": "_content/taskManagementBackend",
   "Mode": "Default",
@@ -31,8 +31,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "56d1f6wqpg",
-      "Integrity": "7b8+Lm8F0rdezPyCYCaLyvbwUECh4bfeD0phs5r5qmg=",
+      "Fingerprint": "y4vcagqhv2",
+      "Integrity": "Xm1brW894xDkYc4f4QDhWigz9q7OunpW50nP9gbWa7c=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\asset-manifest.json"
@@ -94,8 +94,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "oybndxnmxm",
-      "Integrity": "UN1pig4r9QtkH3yaX61RHIp2qC5AHvOobsObZyHRTyQ=",
+      "Fingerprint": "eftc54fbge",
+      "Integrity": "BntFvDlS7QywRRYPKM9S5lP0HyTY/EfcOnlPadHT+70=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\static\\css\\main.92da5d4c.css"
@@ -136,8 +136,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "mzl90z1n6o",
-      "Integrity": "khPYQKbVP4opbzHas+RiDf8ZWzJZbksWq5AWGCI41wU=",
+      "Fingerprint": "ejcwmb07q7",
+      "Integrity": "eqkpAXivtGonvnpjidGKtUAxn+Tu5nFmXrIK91VnRH0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\static\\js\\main.bbbd4588.js"
@@ -157,8 +157,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "ik7vdf8oea",
-      "Integrity": "EoHHmfqk4BJdKUazyfUbwWWiXe9UnLXHQfLX/V3F44o=",
+      "Fingerprint": "hjpslxwa6d",
+      "Integrity": "s7YHsNfSZvT9yGmyXZk3j2BKGSJaks2ZpaS68PqFUsA=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\static\\js\\main.bbbd4588.js.LICENSE.txt"
@@ -187,51 +187,6 @@
   ],
   "Endpoints": [
     {
-      "Route": "asset-manifest.56d1f6wqpg.json",
-      "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\asset-manifest.json",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "369"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/json"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"7b8+Lm8F0rdezPyCYCaLyvbwUECh4bfeD0phs5r5qmg=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "56d1f6wqpg"
-        },
-        {
-          "Name": "label",
-          "Value": "asset-manifest.json"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-7b8+Lm8F0rdezPyCYCaLyvbwUECh4bfeD0phs5r5qmg="
-        }
-      ]
-    },
-    {
       "Route": "asset-manifest.json",
       "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\asset-manifest.json",
       "Selectors": [],
@@ -242,7 +197,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "369"
+          "Value": "381"
         },
         {
           "Name": "Content-Type",
@@ -250,11 +205,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"7b8+Lm8F0rdezPyCYCaLyvbwUECh4bfeD0phs5r5qmg=\""
+          "Value": "\"Xm1brW894xDkYc4f4QDhWigz9q7OunpW50nP9gbWa7c=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -264,7 +219,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-7b8+Lm8F0rdezPyCYCaLyvbwUECh4bfeD0phs5r5qmg="
+          "Value": "sha256-Xm1brW894xDkYc4f4QDhWigz9q7OunpW50nP9gbWa7c="
+        }
+      ]
+    },
+    {
+      "Route": "asset-manifest.y4vcagqhv2.json",
+      "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\asset-manifest.json",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "381"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/json"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Xm1brW894xDkYc4f4QDhWigz9q7OunpW50nP9gbWa7c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "y4vcagqhv2"
+        },
+        {
+          "Name": "label",
+          "Value": "asset-manifest.json"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Xm1brW894xDkYc4f4QDhWigz9q7OunpW50nP9gbWa7c="
         }
       ]
     },
@@ -291,7 +291,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -328,7 +328,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -373,7 +373,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 28 Dec 2024 01:08:28 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -418,7 +418,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 28 Dec 2024 01:08:28 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -443,7 +443,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "678"
+          "Value": "679"
         },
         {
           "Name": "Content-Type",
@@ -451,11 +451,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"UN1pig4r9QtkH3yaX61RHIp2qC5AHvOobsObZyHRTyQ=\""
+          "Value": "\"BntFvDlS7QywRRYPKM9S5lP0HyTY/EfcOnlPadHT+70=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -465,7 +465,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-UN1pig4r9QtkH3yaX61RHIp2qC5AHvOobsObZyHRTyQ="
+          "Value": "sha256-BntFvDlS7QywRRYPKM9S5lP0HyTY/EfcOnlPadHT+70="
         }
       ]
     },
@@ -492,7 +492,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -529,7 +529,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -552,7 +552,7 @@
       ]
     },
     {
-      "Route": "static/css/main.92da5d4c.oybndxnmxm.css",
+      "Route": "static/css/main.92da5d4c.eftc54fbge.css",
       "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\css\\main.92da5d4c.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -562,7 +562,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "678"
+          "Value": "679"
         },
         {
           "Name": "Content-Type",
@@ -570,11 +570,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"UN1pig4r9QtkH3yaX61RHIp2qC5AHvOobsObZyHRTyQ=\""
+          "Value": "\"BntFvDlS7QywRRYPKM9S5lP0HyTY/EfcOnlPadHT+70=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -584,7 +584,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "oybndxnmxm"
+          "Value": "eftc54fbge"
         },
         {
           "Name": "label",
@@ -592,7 +592,52 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-UN1pig4r9QtkH3yaX61RHIp2qC5AHvOobsObZyHRTyQ="
+          "Value": "sha256-BntFvDlS7QywRRYPKM9S5lP0HyTY/EfcOnlPadHT+70="
+        }
+      ]
+    },
+    {
+      "Route": "static/js/main.bbbd4588.ejcwmb07q7.js",
+      "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.bbbd4588.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "326822"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"eqkpAXivtGonvnpjidGKtUAxn+Tu5nFmXrIK91VnRH0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ejcwmb07q7"
+        },
+        {
+          "Name": "label",
+          "Value": "static/js/main.bbbd4588.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-eqkpAXivtGonvnpjidGKtUAxn+Tu5nFmXrIK91VnRH0="
         }
       ]
     },
@@ -607,7 +652,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "326820"
+          "Value": "326822"
         },
         {
           "Name": "Content-Type",
@@ -615,11 +660,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"khPYQKbVP4opbzHas+RiDf8ZWzJZbksWq5AWGCI41wU=\""
+          "Value": "\"eqkpAXivtGonvnpjidGKtUAxn+Tu5nFmXrIK91VnRH0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -629,7 +674,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-khPYQKbVP4opbzHas+RiDf8ZWzJZbksWq5AWGCI41wU="
+          "Value": "sha256-eqkpAXivtGonvnpjidGKtUAxn+Tu5nFmXrIK91VnRH0="
         }
       ]
     },
@@ -656,7 +701,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -679,7 +724,7 @@
       ]
     },
     {
-      "Route": "static/js/main.bbbd4588.js.LICENSE.ik7vdf8oea.txt",
+      "Route": "static/js/main.bbbd4588.js.LICENSE.hjpslxwa6d.txt",
       "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.bbbd4588.js.LICENSE.txt",
       "Selectors": [],
       "ResponseHeaders": [
@@ -689,7 +734,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1457"
+          "Value": "1515"
         },
         {
           "Name": "Content-Type",
@@ -697,11 +742,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"EoHHmfqk4BJdKUazyfUbwWWiXe9UnLXHQfLX/V3F44o=\""
+          "Value": "\"s7YHsNfSZvT9yGmyXZk3j2BKGSJaks2ZpaS68PqFUsA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -711,7 +756,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ik7vdf8oea"
+          "Value": "hjpslxwa6d"
         },
         {
           "Name": "label",
@@ -719,7 +764,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-EoHHmfqk4BJdKUazyfUbwWWiXe9UnLXHQfLX/V3F44o="
+          "Value": "sha256-s7YHsNfSZvT9yGmyXZk3j2BKGSJaks2ZpaS68PqFUsA="
         }
       ]
     },
@@ -734,7 +779,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1457"
+          "Value": "1515"
         },
         {
           "Name": "Content-Type",
@@ -742,11 +787,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"EoHHmfqk4BJdKUazyfUbwWWiXe9UnLXHQfLX/V3F44o=\""
+          "Value": "\"s7YHsNfSZvT9yGmyXZk3j2BKGSJaks2ZpaS68PqFUsA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -756,7 +801,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-EoHHmfqk4BJdKUazyfUbwWWiXe9UnLXHQfLX/V3F44o="
+          "Value": "sha256-s7YHsNfSZvT9yGmyXZk3j2BKGSJaks2ZpaS68PqFUsA="
         }
       ]
     },
@@ -783,7 +828,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
+          "Value": "Sun, 19 Jan 2025 18:25:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -794,51 +839,6 @@
         {
           "Name": "integrity",
           "Value": "sha256-3SsU1OTWMlmYvVJ1f0/FIsChyZOMRPzHp9P5G4ojJwo="
-        }
-      ]
-    },
-    {
-      "Route": "static/js/main.bbbd4588.mzl90z1n6o.js",
-      "AssetFile": "C:\\Users\\Aryam\\Desktop\\TaskManagement\\taskManagementBackend\\wwwroot\\static\\js\\main.bbbd4588.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "326820"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"khPYQKbVP4opbzHas+RiDf8ZWzJZbksWq5AWGCI41wU=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 03 Jan 2025 21:49:06 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "mzl90z1n6o"
-        },
-        {
-          "Name": "label",
-          "Value": "static/js/main.bbbd4588.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-khPYQKbVP4opbzHas+RiDf8ZWzJZbksWq5AWGCI41wU="
         }
       ]
     }
