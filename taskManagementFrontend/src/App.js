@@ -10,13 +10,13 @@ import "./index.css";
 import "./i18next";
 import "./components/style.css";
 
-
-// LoginPage Component for user selection
+// LoginPage Component for user selection with translation
 const LoginPage = ({ setUserRole }) => {
+  const { t } = useTranslation();
   return (
     <Container maxWidth="sm" className="app-container">
       <Typography variant="h4" gutterBottom>
-        Select a User
+        {t("selectAUser")}
       </Typography>
       <Button
         variant="contained"
@@ -25,7 +25,7 @@ const LoginPage = ({ setUserRole }) => {
         style={{ marginBottom: "1rem" }}
         onClick={() => setUserRole("admin")}
       >
-        Admin
+        {t("admin")}
       </Button>
       <Button
         variant="contained"
@@ -34,7 +34,7 @@ const LoginPage = ({ setUserRole }) => {
         style={{ marginBottom: "1rem" }}
         onClick={() => setUserRole("user1")}
       >
-        User 1
+        {t("user1")}
       </Button>
       <Button
         variant="contained"
@@ -42,14 +42,14 @@ const LoginPage = ({ setUserRole }) => {
         fullWidth
         onClick={() => setUserRole("user2")}
       >
-        User 2
+        {t("user2")}
       </Button>
     </Container>
   );
 };
 
 const App = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   // State for logged in user role; if null, user is not logged in
   const [userRole, setUserRole] = useState(null);
@@ -81,15 +81,15 @@ const App = () => {
       try {
         const data = await fetchTasks(selectedEntity);
         setTasks(data);
-      } catch (error) {
-        setError("Error fetching tasks: " + error.message);
+      } catch (err) {
+        setError(t("errorFetchingTasks") + " " + err.message);
         setSnackbarOpen(true);
       } finally {
         setLoading(false);
       }
     };
     getTasks();
-  }, [selectedEntity, userRole]);
+  }, [selectedEntity, userRole, t]);
 
   // Automatically set the selected entity based on the logged in user (if not admin)
   useEffect(() => {
@@ -106,17 +106,25 @@ const App = () => {
   // Handle task creation
   const handleTaskCreated = async (task) => {
     try {
+      // Automatically assign entityId for non-admin users
+      if (userRole.toLowerCase() !== "admin") {
+        const mapping = {
+          user1: "1",
+          user2: "2"
+        };
+        task.entityId = mapping[userRole.toLowerCase()] || "";
+      }
       // Validate required fields
       if (!task.title || !task.description || !task.dueDate || !task.entityId) {
-        setError("All fields are required.");
+        setError(t("allFieldsRequired"));
         setSnackbarOpen(true);
         return;
       }
       await createTask(task);
       const updatedTasks = await fetchTasks(selectedEntity);
       setTasks(updatedTasks);
-    } catch (error) {
-      setError("Failed to create task: " + error.message);
+    } catch (err) {
+      setError(t("failedCreateTask") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -125,15 +133,15 @@ const App = () => {
   const handleTaskUpdate = async (updatedTask) => {
     try {
       if (!updatedTask.id) {
-        setError("Task ID is required for update.");
+        setError(t("taskIdRequiredUpdate"));
         setSnackbarOpen(true);
         return;
       }
       await updateTask(updatedTask);
       const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      setError("Failed to update task: " + error.message);
+    } catch (err) {
+      setError(t("failedUpdateTask") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -143,8 +151,8 @@ const App = () => {
     try {
       const task = await fetchTaskById(taskId);
       setTaskToEdit(task);
-    } catch (error) {
-      setError("Error fetching task for editing: " + error.message);
+    } catch (err) {
+      setError(t("errorFetchingTaskEdit") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -159,7 +167,7 @@ const App = () => {
     try {
       const task = tasks.find((t) => t.id === taskId);
       if (!task) {
-        setError("Task not found.");
+        setError(t("taskNotFound"));
         setSnackbarOpen(true);
         return;
       }
@@ -167,8 +175,8 @@ const App = () => {
       await updateTask(updatedTask);
       const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      setError("Error updating task status: " + error.message);
+    } catch (err) {
+      setError(t("errorUpdatingStatus") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -177,15 +185,15 @@ const App = () => {
   const handleDeleteTask = async (id) => {
     try {
       if (!id) {
-        setError("Task ID is required for deletion.");
+        setError(t("taskIdRequiredDeletion"));
         setSnackbarOpen(true);
         return;
       }
       await deleteTask(id);
       const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      setError("Error deleting task: " + error.message);
+    } catch (err) {
+      setError(t("errorDeletingTask") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -250,9 +258,9 @@ const App = () => {
             className="form-field"
             value={selectedEntity}
           >
-            <option value="">All Tasks</option>
-            <option value="1">User1</option>
-            <option value="2">User2</option>
+            <option value="">{t("allTasks")}</option>
+            <option value="1">{t("user1")}</option>
+            <option value="2">{t("user2")}</option>
           </select>
         )}
 
@@ -282,15 +290,11 @@ const App = () => {
             ))}
           </div>
         ) : (
-          <Typography variant="body1">No tasks available.</Typography>
+          <Typography variant="body1">{t("noTasksAvailable")}</Typography>
         )}
 
         {/* Snackbar for error messages */}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-        >
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
           <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: "100%" }}>
             {error}
           </Alert>

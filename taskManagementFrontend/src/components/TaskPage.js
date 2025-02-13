@@ -3,8 +3,10 @@ import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask } from ".
 import TaskForm from "./TaskForm";
 import TaskItem from "./TaskItem";
 import { Typography, Container, Button, CircularProgress, Snackbar, Alert } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState([]);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,21 +24,35 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
       try {
         const data = await fetchTasks(selectedEntity);
         setTasks(data);
-      } catch (error) {
-        setError("Error fetching tasks: " + error.message);
+      } catch (err) {
+        setError(t("errorFetchingTasks") + " " + err.message);
         setSnackbarOpen(true);
       } finally {
         setLoading(false);
       }
     };
     getTasks();
-  }, [selectedEntity]);
+  }, [selectedEntity, t]);
 
-  // Handle task creation
+  // Handle task creation with validation and auto-assigning entityId for non-admin users
   const handleTaskCreated = async (task) => {
     try {
-      if (!task.title || !task.description || !task.dueDate || !task.entityId) {
-        setError("All fields are required.");
+      // If the user is not admin, assign entityId automatically based on userRole
+      if (userRole.toLowerCase() !== "admin") {
+        const mapping = {
+          user1: "1",
+          user2: "2"
+        };
+        task.entityId = mapping[userRole.toLowerCase()] || "";
+      }
+      // For admin, entityId must be provided via the form
+      if (
+        !task.title ||
+        !task.description ||
+        !task.dueDate ||
+        (userRole.toLowerCase() === "admin" && !task.entityId)
+      ) {
+        setError(t("allFieldsRequired"));
         setSnackbarOpen(true);
         return;
       }
@@ -44,8 +60,8 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
       await createTask(task);
       const updatedTasks = await fetchTasks(selectedEntity);
       setTasks(updatedTasks);
-    } catch (error) {
-      setError("Failed to create task: " + error.message);
+    } catch (err) {
+      setError(t("failedCreateTask") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -54,16 +70,15 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
   const handleTaskUpdate = async (updatedTask) => {
     try {
       if (!updatedTask.id) {
-        setError("Task ID is required for update.");
+        setError(t("taskIdRequiredUpdate"));
         setSnackbarOpen(true);
         return;
       }
-
       await updateTask(updatedTask);
       const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      setError("Failed to update task: " + error.message);
+    } catch (err) {
+      setError(t("failedUpdateTask") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -73,8 +88,8 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
     try {
       const task = await fetchTaskById(taskId);
       setTaskToEdit(task);
-    } catch (error) {
-      setError("Error fetching task for editing: " + error.message);
+    } catch (err) {
+      setError(t("errorFetchingTaskEdit") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -89,17 +104,16 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
     try {
       const task = tasks.find((t) => t.id === taskId);
       if (!task) {
-        setError("Task not found.");
+        setError(t("taskNotFound"));
         setSnackbarOpen(true);
         return;
       }
-
       const updatedTask = { ...task, status };
       await updateTask(updatedTask);
       const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      setError("Error updating task status: " + error.message);
+    } catch (err) {
+      setError(t("errorUpdatingStatus") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -108,16 +122,15 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
   const handleDeleteTask = async (id) => {
     try {
       if (!id) {
-        setError("Task ID is required for deletion.");
+        setError(t("taskIdRequiredDeletion"));
         setSnackbarOpen(true);
         return;
       }
-
       await deleteTask(id);
       const data = await fetchTasks(selectedEntity);
       setTasks(data);
-    } catch (error) {
-      setError("Error deleting task: " + error.message);
+    } catch (err) {
+      setError(t("errorDeletingTask") + " " + err.message);
       setSnackbarOpen(true);
     }
   };
@@ -125,20 +138,21 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
   return (
     <Container maxWidth="sm" className="tasks-page">
       <Typography variant="h4" gutterBottom>
-        {userRole === "admin" ? "Admin Dashboard" : `User Dashboard (${userRole})`}
+        {userRole === "admin" ? t("adminDashboard") : `${t("userDashboard")} (${userRole})`}
       </Typography>
 
       {/* Logout Button */}
       <Button variant="contained" color="secondary" onClick={onLogout}>
-        Logout
+        {t("logout")}
       </Button>
 
-      {/* Task Form */}
+      {/* Task Form with userRole passed as a prop */}
       <TaskForm
         onTaskCreated={handleTaskCreated}
         taskToEdit={taskToEdit}
         onEditComplete={handleEditComplete}
         onUpdateTask={handleTaskUpdate}
+        userRole={userRole}
       />
 
       {/* Task List */}
@@ -157,12 +171,12 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
           ))}
         </div>
       ) : (
-        <Typography variant="body1">No tasks available.</Typography>
+        <Typography variant="body1">{t("noTasksAvailable")}</Typography>
       )}
 
       {/* Snackbar for error messages */}
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+        <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: "100%" }}>
           {error}
         </Alert>
       </Snackbar>

@@ -8,29 +8,31 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import { useTranslation } from "react-i18next";
 
 const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
+  const { t } = useTranslation();
   const [openNotification, setOpenNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
 
   // Format Due Date
-  const formattedDueDate = task.dueDate ? task.dueDate.split("T")[0] : "N/A";
+  const formattedDueDate = task.dueDate ? task.dueDate.split("T")[0] : t("na");
 
   // Save PDF: Saves the file locally
   const saveTaskAsPDF = () => {
     try {
       const doc = new jsPDF();
-      doc.text(`Title: ${task.title}`, 10, 20);
-      doc.text(`Description: ${task.description}`, 10, 30);
-      doc.text(`Due Date: ${formattedDueDate}`, 10, 40); // Include Due Date
-      doc.text(`Status: ${task.status}`, 10, 50);
+      doc.text(`${t("pdfTitle")} ${task.title}`, 10, 20);
+      doc.text(`${t("pdfDescription")} ${task.description}`, 10, 30);
+      doc.text(`${t("pdfDueDate")} ${formattedDueDate}`, 10, 40);
+      doc.text(`${t("pdfStatus")} ${task.status}`, 10, 50);
 
-      doc.save(`${task.title}.pdf`); // Save the PDF locally
-      setNotificationMessage("PDF Saved Successfully!");
-      setOpenNotification(true); // Show notification
+      doc.save(`${task.title}.pdf`);
+      setNotificationMessage(t("pdfSavedSuccess"));
+      setOpenNotification(true);
     } catch (error) {
-      console.error("Error saving PDF:", error);
-      setNotificationMessage("Failed to save PDF. Please try again.");
+      console.error(t("pdfSaveFailed"), error);
+      setNotificationMessage(t("pdfSaveFailed"));
       setOpenNotification(true);
     }
   };
@@ -46,14 +48,18 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
       }}
     >
       <h3>{task.title}</h3>
-      <p><strong>Description:</strong> {task.description}</p>
-      <p><strong>Due Date:</strong> {formattedDueDate}</p> {/* Include Due Date */}
       <p>
-        <strong>Status:</strong>{" "}
+        <strong>{t("pdfDescription")}</strong> {task.description}
+      </p>
+      <p>
+        <strong>{t("pdfDueDate")}</strong> {formattedDueDate}
+      </p>
+      <p>
+        <strong>{t("pdfStatus")}</strong>{" "}
         {task.status === "Pending" ? (
-          <span style={{ color: "orange" }}>Pending</span>
+          <span style={{ color: "orange" }}>{t("pending")}</span>
         ) : (
-          <span style={{ color: "green" }}>Completed</span>
+          <span style={{ color: "green" }}>{t("completed")}</span>
         )}
       </p>
       <div style={{ display: "flex", gap: "10px" }}>
@@ -64,7 +70,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
           startIcon={<EditIcon />}
           onClick={() => onEdit(task.id)}
         >
-          Edit
+          {t("edit")}
         </Button>
 
         {/* Delete button */}
@@ -74,7 +80,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
           startIcon={<DeleteIcon />}
           onClick={() => onDelete(task.id)}
         >
-          Delete
+          {t("delete")}
         </Button>
 
         {/* Save as PDF button */}
@@ -84,7 +90,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
           startIcon={<SaveIcon />}
           onClick={saveTaskAsPDF}
         >
-          Save
+          {t("save")}
         </Button>
 
         {/* Share PDF button */}
@@ -94,7 +100,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
           startIcon={<ShareIcon />}
           onClick={() => onShareTask(task)}
         >
-          Share
+          {t("share")}
         </Button>
 
         {/* Toggle Status button */}
@@ -111,7 +117,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
             )
           }
         >
-          {task.status === "Pending" ? "Complete" : "Pending"}
+          {task.status === "Pending" ? t("complete") : t("pending")}
         </Button>
       </div>
 
@@ -121,7 +127,13 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
         autoHideDuration={3000}
         onClose={() => setOpenNotification(false)}
       >
-        <Alert severity={notificationMessage.includes("Successfully") ? "success" : "error"}>
+        <Alert
+          severity={
+            notificationMessage.includes(t("pdfSavedSuccess"))
+              ? "success"
+              : "error"
+          }
+        >
           {notificationMessage}
         </Alert>
       </Snackbar>
