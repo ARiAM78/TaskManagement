@@ -41,15 +41,23 @@ const SideMenu = ({ menuOpen, toggleMenu, toggleLanguage, lang, userRole, onLogo
       </AppBar>
 
       {/* Drawer for the side menu */}
-      <Drawer open={menuOpen} onClose={toggleMenu}>
+      <Drawer
+        anchor="left"
+        open={menuOpen}
+        onClose={toggleMenu}
+        PaperProps={{
+          style: { left: 0, right: "auto" },
+        }}
+        className="drawer"
+      >
         <List>
-          <ListItem button onClick={toggleMenu}>
+          <ListItem button onClick={toggleMenu} className="list-item">
             <ListItemText primary={lang === "en" ? "Home" : "الرئيسية"} />
           </ListItem>
-          <ListItem button onClick={toggleMenu}>
+          <ListItem button onClick={toggleMenu} className="list-item">
             <ListItemText primary={lang === "en" ? "Tasks" : "المهام"} />
           </ListItem>
-          <ListItem button onClick={toggleMenu}>
+          <ListItem button onClick={toggleMenu} className="list-item">
             <ListItemText primary={lang === "en" ? "Settings" : "الإعدادات"} />
           </ListItem>
           {/* Language toggle */}

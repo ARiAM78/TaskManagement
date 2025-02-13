@@ -83,6 +83,7 @@ export const updateTask = async (updatedTask) => {
       throw new Error("Task ID is required for update.");
     }
 
+    // The entityId should be maintained based on the user role on the client side.
     const response = await fetch(`${API_URL}/${updatedTask.id}`, {
       method: "PUT",
       headers: {

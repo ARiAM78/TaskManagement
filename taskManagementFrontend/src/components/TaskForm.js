@@ -10,11 +10,12 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
     description: "",
     dueDate: "",
     status: "Pending",
-    entityId: "", // Added EntityId
+    entityId: "", // EntityId field in state
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  // When taskToEdit changes, update the form state or reset the form
   useEffect(() => {
     if (taskToEdit) {
       setTask(taskToEdit);
@@ -23,6 +24,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
     }
   }, [taskToEdit]);
 
+  // Reset form fields
   const resetForm = () => {
     setTask({
       title: "",
@@ -33,6 +35,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
     });
   };
 
+  // Handle changes in form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTask((prevTask) => ({
@@ -41,10 +44,18 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
     }));
   };
 
+  // Handle form submission with validation based on user role
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!task.title || !task.description || !task.dueDate || !task.entityId) {
-      setSnackbarMessage("All fields are required!");
+    // Validate common required fields
+    if (!task.title || !task.description || !task.dueDate) {
+      setSnackbarMessage(t("allFieldsRequired"));
+      setOpenSnackbar(true);
+      return;
+    }
+    // For admin users, entityId must be selected
+    if (userRole.toLowerCase() === "admin" && !task.entityId) {
+      setSnackbarMessage(t("entitySelectionRequired"));
       setOpenSnackbar(true);
       return;
     }
@@ -59,11 +70,12 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
       resetForm();
     } catch (error) {
       console.error("Error handling task submission:", error);
-      setSnackbarMessage("Failed to add/update task. Please try again.");
+      setSnackbarMessage(t("taskAddUpdateFailed"));
       setOpenSnackbar(true);
     }
   };
 
+  // Cancel update operation
   const handleCancelUpdate = () => {
     resetForm();
     onEditComplete();
@@ -77,7 +89,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
         gutterBottom
         className="task-management-title"
       >
-        Task Management
+        {t("taskManagement")}
       </Typography>
 
       <form className="task-form" onSubmit={handleSubmit}>
@@ -125,6 +137,26 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
             <MenuItem value="Completed">{t("completed")}</MenuItem>
           </Select>
         </FormControl>
+
+        {/* Render entity selection only for admin users */}
+        {userRole.toLowerCase() === "admin" && (
+          <FormControl fullWidth className="form-field">
+            <InputLabel>{t("entity")}</InputLabel>
+            <Select
+              name="entityId"
+              value={task.entityId}
+              onChange={handleChange}
+              label={t("entity")}
+              required
+            >
+              <MenuItem value="">
+                <em>{t("none")}</em>
+              </MenuItem>
+              <MenuItem value="1">User1</MenuItem>
+              <MenuItem value="2">User2</MenuItem>
+            </Select>
+          </FormControl>
+        )}
 
         <Button
           type="submit"

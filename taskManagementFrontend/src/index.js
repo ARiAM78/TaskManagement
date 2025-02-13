@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { CssBaseline } from '@mui/material'; // Added to apply Material-UI's baseline styles
 import './i18next';
+import "./components/style.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
