@@ -50,32 +50,22 @@ const LoginPage = ({ setUserRole }) => {
 
 const App = () => {
   const { i18n, t } = useTranslation();
-
-  // State for logged in user role; if null, user is not logged in
   const [userRole, setUserRole] = useState(null);
-
-  // State for tasks and editing mode
   const [tasks, setTasks] = useState([]);
   const [taskToEdit, setTaskToEdit] = useState(null);
-
-  // States for loading and error handling
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  // Additional states for language, side menu and selected entity
   const [lang, setLang] = useState("en");
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState("");
-
-  // Snackbar close handler
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
   // Fetch tasks when component mounts or when the selected entity changes
   useEffect(() => {
-    if (!userRole) return; // Don't fetch tasks if not logged in
+    if (!userRole) return;
     const getTasks = async () => {
       setLoading(true);
       try {
@@ -286,6 +276,7 @@ const App = () => {
                 onDelete={handleDeleteTask}
                 onStatusChange={handleStatusChange}
                 onShareTask={shareTask}
+                userRole={userRole}
               />
             ))}
           </div>

@@ -10,13 +10,30 @@ import DoneIcon from "@mui/icons-material/Done";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import { useTranslation } from "react-i18next";
 
-const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
+const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRole }) => {
   const { t } = useTranslation();
   const [openNotification, setOpenNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
-
-  // Format Due Date
   const formattedDueDate = task.dueDate ? task.dueDate.split("T")[0] : t("na");
+
+// Function to determine the owner of the task
+  const getTaskOwner = () => {
+    
+    if (task.userName) {
+      return task.userName;
+    }
+    if (userRole.toLowerCase() !== "admin") {
+      return userRole;
+    }
+    if (task.entityId) {
+      const mapping = {
+        "1": "User1",
+        "2": "User2"
+      };
+      return mapping[task.entityId] || t("unknownUser");
+    }
+    return t("unknownUser");
+  };
 
   // Save PDF: Saves the file locally
   const saveTaskAsPDF = () => {
@@ -26,7 +43,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask }) => {
       doc.text(`${t("pdfDescription")} ${task.description}`, 10, 30);
       doc.text(`${t("pdfDueDate")} ${formattedDueDate}`, 10, 40);
       doc.text(`${t("pdfStatus")} ${task.status}`, 10, 50);
-
+      doc.text(`${t("pdfUserName")}: ${getTaskOwner()}`, 10, 60);
       doc.save(`${task.title}.pdf`);
       setNotificationMessage(t("pdfSavedSuccess"));
       setOpenNotification(true);
