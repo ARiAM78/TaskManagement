@@ -58,5 +58,6 @@
   "errorUpdatingStatus": "Error updating task status:",
   "taskIdRequiredDeletion": "Task ID is required for deletion.",
   "errorDeletingTask": "Error deleting task:",
-  "noTasksAvailable": "No tasks available."
+  "noTasksAvailable": "No tasks available.",
+  "pdfUserName": "User"
 }
