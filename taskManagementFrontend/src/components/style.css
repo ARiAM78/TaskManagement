@@ -209,3 +209,46 @@ body {
 body[dir="rtl"] .custom-app-bar {
   text-align: center;
 }
+
+/* Dashboard Container */
+.dashboard-container {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+/* Dashboard Card styling */
+.dashboard-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* Icon container for dashboard cards */
+.dashboard-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Dashboard icon styling */
+.dashboard-icon {
+  font-size: 48px;
+  color: #4A628A;
+}
+
+/* Dashboard title styling */
+.dashboard-title {
+  text-align: center;
+  color: #4A628A;
+  margin-bottom: 10px;
+}
+
+/* Dashboard count styling */
+.dashboard-count {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  color: #3A4F73;
+}

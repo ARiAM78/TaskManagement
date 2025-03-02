@@ -58,5 +58,11 @@
   "errorUpdatingStatus": "حدث خطأ أثناء تحديث حالة المهمة:",
   "taskIdRequiredDeletion": "مطلوب معرف المهمة للحذف.",
   "errorDeletingTask": "حدث خطأ أثناء حذف المهمة:",
-  "noTasksAvailable": "لا توجد مهام متاحة."
+  "noTasksAvailable": "لا توجد مهام متاحة.",
+  "totalTasks": "إجمالي المهام",
+  "totalUsers": "إجمالي المستخدمين",
+  "searchTasks": "بحث عن المهام",
+  "entity": "المستخدم",
+  "edit": "Edit",
+  "delete": "Delete"
 }

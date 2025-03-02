@@ -121,4 +121,66 @@ public class TasksController : ControllerBase
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
+
+    // GET: api/tasks/search
+    [HttpGet("search")]
+    public async Task<ActionResult<IEnumerable<Task>>> SearchTasks([FromQuery] string query)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("Search query cannot be empty.");
+
+            // Search tasks based solely on Title
+            var tasks = await _context.Tasks
+                .Where(t => t.Title.Contains(query))
+                .ToListAsync();
+
+            if (tasks == null || tasks.Count == 0)
+                return NotFound("No tasks match your search query.");
+
+            return Ok(tasks);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while searching tasks: {ex.Message}");
+        }
+    }
+
+    // GET: api/tasks/dashboard
+    [HttpGet("dashboard")]
+    public async Task<ActionResult> GetDashboardData([FromQuery] int? entityId)
+    {
+        try
+        {
+            int tasksCount, usersCount;
+
+            if (entityId.HasValue)
+            {
+                tasksCount = await _context.Tasks
+                    .Where(t => t.EntityId == entityId.Value)
+                    .CountAsync();
+
+                usersCount = await _context.Tasks
+                    .Where(t => t.EntityId == entityId.Value)
+                    .Select(t => t.EntityId)
+                    .Distinct()
+                    .CountAsync();
+            }
+            else
+            {
+                tasksCount = await _context.Tasks.CountAsync();
+                usersCount = await _context.Tasks
+                    .Select(t => t.EntityId)
+                    .Distinct()
+                    .CountAsync();
+            }
+
+            return Ok(new { tasksCount, usersCount });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while fetching dashboard data: {ex.Message}");
+        }
+    }
 }

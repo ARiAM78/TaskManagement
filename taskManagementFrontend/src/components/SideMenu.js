@@ -2,10 +2,16 @@ import React from 'react';
 import { Drawer, List, ListItem, ListItemText, IconButton, AppBar, Toolbar, Button, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import "./style.css";
 
 const SideMenu = ({ menuOpen, toggleMenu, toggleLanguage, lang, userRole, onLogout }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const handleNavigation = (path) => {
+    toggleMenu();
+    navigate(path);
+  };
 
   return (
     <>
@@ -42,13 +48,16 @@ const SideMenu = ({ menuOpen, toggleMenu, toggleLanguage, lang, userRole, onLogo
         className="drawer"
       >
         <List>
-          <ListItem button onClick={toggleMenu} className="list-item">
+          <ListItem button onClick={() => handleNavigation('/')} className="list-item">
             <ListItemText primary={lang === "en" ? "Home" : "الرئيسية"} />
           </ListItem>
-          <ListItem button onClick={toggleMenu} className="list-item">
+          <ListItem button onClick={() => handleNavigation('/tasks')} className="list-item">
             <ListItemText primary={lang === "en" ? "Tasks" : "المهام"} />
           </ListItem>
-          <ListItem button onClick={toggleMenu} className="list-item">
+          <ListItem button onClick={() => handleNavigation('/dashboard')} className="list-item">
+            <ListItemText primary={lang === "en" ? "Dashboard" : "لوحة المعلومات"} />
+          </ListItem>
+          <ListItem button onClick={() => handleNavigation('/settings')} className="list-item">
             <ListItemText primary={lang === "en" ? "Settings" : "الإعدادات"} />
           </ListItem>
           <ListItem button onClick={toggleLanguage} className="list-item">
