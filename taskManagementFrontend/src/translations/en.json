@@ -59,5 +59,10 @@
   "taskIdRequiredDeletion": "Task ID is required for deletion.",
   "errorDeletingTask": "Error deleting task:",
   "noTasksAvailable": "No tasks available.",
-  "pdfUserName": "User"
+  "totalTasks": "Total Tasks",
+  "totalUsers": "Total Users",
+  "searchTasks": "Search Tasks",
+  "entity": "User",
+  "edit": "Edit",
+  "delete": "Delete"
 }

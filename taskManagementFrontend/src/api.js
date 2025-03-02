@@ -3,6 +3,7 @@ const API_URL = "https://localhost:7228/api/tasks"; // Backend API URL for tasks
 // Fetch all tasks or filter by EntityId
 export const fetchTasks = async (entityId = null) => {
   try {
+    // If an entityId is provided, filter tasks by it, otherwise fetch all tasks
     const url = entityId ? `${API_URL}?entityId=${entityId}` : API_URL;
     const response = await fetch(url, {
       method: "GET",
@@ -52,6 +53,7 @@ export const fetchTaskById = async (id) => {
 // Create a new task with EntityId
 export const createTask = async (task) => {
   try {
+    // Ensure all required fields are provided, including entityId which is set on the client side based on the user role
     if (!task.title || !task.description || !task.dueDate || !task.entityId) {
       throw new Error("All fields (title, description, dueDate, entityId) are required.");
     }
@@ -97,6 +99,7 @@ export const updateTask = async (updatedTask) => {
       throw new Error(errorMessage || "Failed to update task");
     }
 
+    // If the server responds with 204 (No Content), return an empty object
     return response.status === 204 ? {} : await response.json();
   } catch (error) {
     console.error("Error updating task:", error);
@@ -118,6 +121,7 @@ export const deleteTask = async (id) => {
       },
     });
 
+    // Check if deletion was successful (status 204 indicates no content)
     if (!response.ok && response.status !== 204) {
       const errorMessage = await response.text();
       throw new Error(errorMessage || "Failed to delete task");

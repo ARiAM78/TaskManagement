@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask } from "./api";
+import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask, searchTasks } from "./api";
 import TaskForm from "./components/TaskForm";
 import TaskItem from "./components/TaskItem";
 import SideMenu from "./components/SideMenu";
-import { Typography, Container, Button, CircularProgress, Snackbar, Alert } from "@mui/material";
+import { Typography, Container, Button, CircularProgress, Snackbar, Alert, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
 import "./index.css";
 import "./i18next";
 import "./components/style.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./components/Dashboard";
 
 // LoginPage Component for user selection with translation
 const LoginPage = ({ setUserRole }) => {
@@ -59,18 +61,26 @@ const App = () => {
   const [lang, setLang] = useState("en");
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  // Fetch tasks when component mounts or when the selected entity changes
+  // Fetch tasks when component mounts or when the selected entity or search query changes
   useEffect(() => {
     if (!userRole) return;
     const getTasks = async () => {
       setLoading(true);
       try {
-        const data = await fetchTasks(selectedEntity);
-        setTasks(data);
+        // If searchQuery is provided, use the searchTasks API; otherwise, use fetchTasks
+        if (searchQuery.trim() !== "") {
+          const data = await searchTasks(searchQuery);
+          setTasks(data);
+        } else {
+          const data = await fetchTasks(selectedEntity);
+          setTasks(data);
+        }
       } catch (err) {
         setError(t("errorFetchingTasks") + " " + err.message);
         setSnackbarOpen(true);
@@ -79,7 +89,7 @@ const App = () => {
       }
     };
     getTasks();
-  }, [selectedEntity, userRole, t]);
+  }, [selectedEntity, userRole, t, searchQuery]);
 
   // Automatically set the selected entity based on the logged in user (if not admin)
   useEffect(() => {
@@ -223,75 +233,124 @@ const App = () => {
     return <LoginPage setUserRole={setUserRole} />;
   }
 
-  // Main Task Management Page (when user is logged in)
   return (
-    <>
-      <Container maxWidth="sm" className="app-container">
-        <SideMenu
-          menuOpen={menuOpen}
-          toggleMenu={() => setMenuOpen(!menuOpen)}
-          toggleLanguage={() => {
-            const newLang = lang === "en" ? "ar" : "en";
-            setLang(newLang);
-            i18n.changeLanguage(newLang);
-            document.body.dir = newLang === "ar" ? "rtl" : "ltr";
-          }}
-          lang={lang}
-          userRole={userRole}
-          onLogout={() => setUserRole(null)}
+    <Router>
+      <Routes>
+        {/* Dashboard route wrapped in Container with SideMenu */}
+        <Route
+          path="/dashboard"
+          element={
+            <Container maxWidth="sm" className="app-container">
+              <SideMenu
+                menuOpen={menuOpen}
+                toggleMenu={() => setMenuOpen(!menuOpen)}
+                toggleLanguage={() => {
+                  const newLang = lang === "en" ? "ar" : "en";
+                  setLang(newLang);
+                  i18n.changeLanguage(newLang);
+                  document.body.dir = newLang === "ar" ? "rtl" : "ltr";
+                }}
+                lang={lang}
+                userRole={userRole}
+                onLogout={() => setUserRole(null)}
+              />
+              <Dashboard userRole={userRole} selectedEntity={selectedEntity} />
+            </Container>
+          }
         />
+        {/* Default route for main content */}
+        <Route
+          path="/*"
+          element={
+            <Container maxWidth="sm" className="app-container">
+              <SideMenu
+                menuOpen={menuOpen}
+                toggleMenu={() => setMenuOpen(!menuOpen)}
+                toggleLanguage={() => {
+                  const newLang = lang === "en" ? "ar" : "en";
+                  setLang(newLang);
+                  i18n.changeLanguage(newLang);
+                  document.body.dir = newLang === "ar" ? "rtl" : "ltr";
+                }}
+                lang={lang}
+                userRole={userRole}
+                onLogout={() => setUserRole(null)}
+              />
 
-        {/* Show entity selection dropdown only for Admin */}
-        {userRole.toLowerCase() === "admin" && (
-          <select
-            onChange={(e) => setSelectedEntity(e.target.value)}
-            className="form-field"
-            value={selectedEntity}
-          >
-            <option value="">{t("allTasks")}</option>
-            <option value="1">{t("user1")}</option>
-            <option value="2">{t("user2")}</option>
-          </select>
-        )}
+              {/* Show entity selection dropdown only for Admin */}
+              {userRole.toLowerCase() === "admin" && (
+                <select
+                  onChange={(e) => setSelectedEntity(e.target.value)}
+                  className="form-field"
+                  value={selectedEntity}
+                >
+                  <option value="">{t("allTasks")}</option>
+                  <option value="1">{t("user1")}</option>
+                  <option value="2">{t("user2")}</option>
+                </select>
+              )}
 
-        {/* Task Form */}
-        <TaskForm
-          onTaskCreated={handleTaskCreated}
-          taskToEdit={taskToEdit}
-          onEditComplete={handleEditComplete}
-          onUpdateTask={handleTaskUpdate}
-          userRole={userRole}
-        />
-
-        {/* Task List */}
-        {loading ? (
-          <CircularProgress />
-        ) : tasks.length > 0 ? (
-          <div className="task-list">
-            {tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onEdit={handleTaskEdit}
-                onDelete={handleDeleteTask}
-                onStatusChange={handleStatusChange}
-                onShareTask={shareTask}
+              {/* Task Form */}
+              <TaskForm
+                onTaskCreated={handleTaskCreated}
+                taskToEdit={taskToEdit}
+                onEditComplete={handleEditComplete}
+                onUpdateTask={handleTaskUpdate}
                 userRole={userRole}
               />
-            ))}
-          </div>
-        ) : (
-          <Typography variant="body1">{t("noTasksAvailable")}</Typography>
-        )}
 
-        {/* Snackbar for error messages */}
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-          <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: "100%" }}>
-            {error}
-          </Alert>
-        </Snackbar>
-      </Container>
-    </>
+              {/* Search Bar added above the Task List */}
+              <div className="search-container">
+                <TextField
+                  label={t("searchTasks") || "Search Tasks"}
+                  variant="outlined"
+                  fullWidth
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="search-field"
+                />
+              </div>
+
+              {/* Task List */}
+              {loading ? (
+                <CircularProgress />
+              ) : tasks.length > 0 ? (
+                <div className="task-list">
+                  {tasks.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      onEdit={handleTaskEdit}
+                      onDelete={handleDeleteTask}
+                      onStatusChange={handleStatusChange}
+                      onShareTask={shareTask}
+                      userRole={userRole}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Typography variant="body1">{t("noTasksAvailable")}</Typography>
+              )}
+
+              {/* Snackbar for error messages */}
+              <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+              >
+                <Alert
+                  onClose={handleSnackbarClose}
+                  severity="error"
+                  sx={{ width: "100%" }}
+                >
+                  {error}
+                </Alert>
+              </Snackbar>
+            </Container>
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 

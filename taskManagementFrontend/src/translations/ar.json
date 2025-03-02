@@ -59,5 +59,10 @@
   "taskIdRequiredDeletion": "مطلوب معرف المهمة للحذف.",
   "errorDeletingTask": "حدث خطأ أثناء حذف المهمة:",
   "noTasksAvailable": "لا توجد مهام متاحة.",
-  "pdfUserName": "المستخدم"
+  "totalTasks": "إجمالي المهام",
+  "totalUsers": "إجمالي المستخدمين",
+  "searchTasks": "بحث عن المهام",
+  "entity": "المستخدم",
+  "edit": "Edit",
+  "delete": "Delete"
 }
