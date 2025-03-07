@@ -11,6 +11,8 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
     dueDate: "",
     status: "Pending",
     entityId: "", // EntityId field in state
+    category: "", 
+    priority: "", 
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -31,7 +33,9 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
       description: "",
       dueDate: "",
       status: "Pending",
-      entityId: "", // Reset EntityId
+      entityId: "",
+      category: "",
+      priority: "",
     });
   };
 
@@ -50,6 +54,17 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
     // Validate common required fields
     if (!task.title || !task.description || !task.dueDate) {
       setSnackbarMessage(t("allFieldsRequired"));
+      setOpenSnackbar(true);
+      return;
+    }
+    // Validate Category and Priority fields
+    if (!task.category) {
+      setSnackbarMessage(t("categoryRequired"));
+      setOpenSnackbar(true);
+      return;
+    }
+    if (!task.priority) {
+      setSnackbarMessage(t("priorityRequired"));
       setOpenSnackbar(true);
       return;
     }
@@ -138,6 +153,42 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
           </Select>
         </FormControl>
 
+        <FormControl fullWidth className="form-field">
+          <InputLabel>{t("category")}</InputLabel>
+          <Select
+            value={task.category}
+            onChange={handleChange}
+            label={t("category")}
+            name="category"
+            required
+          >
+            <MenuItem value="">
+              <em>{t("selectCategory")}</em>
+            </MenuItem>
+            <MenuItem value="Professional">{t("professional")}</MenuItem>
+            <MenuItem value="Academic">{t("academic")}</MenuItem>
+            <MenuItem value="Appointments">{t("appointments")}</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth className="form-field">
+          <InputLabel>{t("priority")}</InputLabel>
+          <Select
+            value={task.priority}
+            onChange={handleChange}
+            label={t("priority")}
+            name="priority"
+            required
+          >
+            <MenuItem value="">
+              <em>{t("selectPriority")}</em>
+            </MenuItem>
+            <MenuItem value="Red">{t("red")}</MenuItem>
+            <MenuItem value="Green">{t("green")}</MenuItem>
+            <MenuItem value="Gray">{t("gray")}</MenuItem>
+          </Select>
+        </FormControl>
+
         {/* Render entity selection only for admin users */}
         {userRole.toLowerCase() === "admin" && (
           <FormControl fullWidth className="form-field">
@@ -164,7 +215,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
           color="primary"
           className="full-width-button"
         >
-          {taskToEdit ? t("update Task") : t("add Task")}
+          {taskToEdit ? t("updateTask") : t("addTask")}
         </Button>
 
         {taskToEdit && (
@@ -174,7 +225,7 @@ const TaskForm = ({ onTaskCreated, taskToEdit, onEditComplete, onUpdateTask, use
             onClick={handleCancelUpdate}
             className="full-width-button"
           >
-            {t("cancel Update")}
+            {t("cancelUpdate")}
           </Button>
         )}
       </form>
