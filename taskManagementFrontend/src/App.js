@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask, searchTasks } from "./api";
+import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask, searchTasks, fetchTasksByCategory } from "./api";
 import TaskForm from "./components/TaskForm";
 import TaskItem from "./components/TaskItem";
 import SideMenu from "./components/SideMenu";
-import { Typography, Container, Button, CircularProgress, Snackbar, Alert, TextField } from "@mui/material";
+import { Typography, Container, Button, CircularProgress, Snackbar, Alert, TextField, MenuItem } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
 import "./index.css";
@@ -62,25 +62,28 @@ const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedClassification, setSelectedClassification] = useState("");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
-  // Fetch tasks when component mounts or when the selected entity or search query changes
   useEffect(() => {
     if (!userRole) return;
     const getTasks = async () => {
       setLoading(true);
       try {
-        // If searchQuery is provided, use the searchTasks API; otherwise, use fetchTasks
+        let data = [];
         if (searchQuery.trim() !== "") {
-          const data = await searchTasks(searchQuery);
-          setTasks(data);
+          // If search query is provided, use searchTasks API
+          data = await searchTasks(searchQuery);
+        } else if (selectedClassification !== "") {
+          // If classification filter is applied, use fetchTasksByCategory API
+          data = await fetchTasksByCategory(selectedClassification);
         } else {
-          const data = await fetchTasks(selectedEntity);
-          setTasks(data);
+          // Otherwise fetch all tasks (optionally filtered by entity)
+          data = await fetchTasks(selectedEntity);
         }
+        setTasks(data);
       } catch (err) {
         setError(t("errorFetchingTasks") + " " + err.message);
         setSnackbarOpen(true);
@@ -89,7 +92,7 @@ const App = () => {
       }
     };
     getTasks();
-  }, [selectedEntity, userRole, t, searchQuery]);
+  }, [selectedEntity, userRole, t, searchQuery, selectedClassification]);
 
   // Automatically set the selected entity based on the logged in user (if not admin)
   useEffect(() => {
@@ -299,7 +302,7 @@ const App = () => {
                 userRole={userRole}
               />
 
-              {/* Search Bar added above the Task List */}
+              {/* Search Bar */}
               <div className="search-container">
                 <TextField
                   label={t("searchTasks") || "Search Tasks"}
@@ -310,6 +313,24 @@ const App = () => {
                   className="search-field"
                 />
               </div>
+
+              {/* Classification Dropdown Filter */}
+              <TextField
+                select
+                label={t("category")}
+                variant="outlined"
+                fullWidth
+                value={selectedClassification}
+                onChange={(e) => setSelectedClassification(e.target.value)}
+                margin="normal"
+              >
+                <MenuItem value="">
+                  <em>{t("allCategories")}</em>
+                </MenuItem>
+                <MenuItem value="Professional">{t("professional")}</MenuItem>
+                <MenuItem value="Academic">{t("academic")}</MenuItem>
+                <MenuItem value="Appointments">{t("appointments")}</MenuItem>
+              </TextField>
 
               {/* Task List */}
               {loading ? (
@@ -333,16 +354,8 @@ const App = () => {
               )}
 
               {/* Snackbar for error messages */}
-              <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-              >
-                <Alert
-                  onClose={handleSnackbarClose}
-                  severity="error"
-                  sx={{ width: "100%" }}
-                >
+              <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: "100%" }}>
                   {error}
                 </Alert>
               </Snackbar>

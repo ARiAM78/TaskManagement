@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask } from "../api";
+import { fetchTasks, fetchTaskById, createTask, updateTask, deleteTask, fetchTasksByCategory, fetchTasksByPriority } from "../api";
 import TaskForm from "./TaskForm";
 import TaskItem from "./TaskItem";
-import { Typography, Container, Button, CircularProgress, Snackbar, Alert } from "@mui/material";
+import { Typography, Container, Button, CircularProgress, Snackbar, Alert, TextField, MenuItem } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
@@ -12,17 +12,35 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedPriority, setSelectedPriority] = useState("");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  // Fetch tasks based on the selected entity
   useEffect(() => {
     const getTasks = async () => {
       setLoading(true);
       try {
-        const data = await fetchTasks(selectedEntity);
+        let data = [];
+        if (selectedCategory && selectedPriority) {
+          // If both filters are applied, fetch all tasks then filter on client side
+          const allTasks = await fetchTasks(selectedEntity);
+          data = allTasks.filter(
+            (task) =>
+              task.category === selectedCategory && task.priority === selectedPriority
+          );
+        } else if (selectedCategory) {
+          // Use API endpoint to filter by category
+          data = await fetchTasksByCategory(selectedCategory);
+        } else if (selectedPriority) {
+          // Use API endpoint to filter by priority
+          data = await fetchTasksByPriority(selectedPriority);
+        } else {
+          // No filter applied
+          data = await fetchTasks(selectedEntity);
+        }
         setTasks(data);
       } catch (err) {
         setError(t("errorFetchingTasks") + " " + err.message);
@@ -32,7 +50,7 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
       }
     };
     getTasks();
-  }, [selectedEntity, t]);
+  }, [selectedEntity, t, selectedCategory, selectedPriority]);
 
   // Handle task creation with validation and auto-assigning entityId for non-admin users
   const handleTaskCreated = async (task) => {
@@ -138,13 +156,50 @@ const TasksPage = ({ userRole, selectedEntity, onLogout }) => {
   return (
     <Container maxWidth="sm" className="tasks-page">
       <Typography variant="h4" gutterBottom>
-        {userRole === "admin" ? t("adminDashboard") : `${t("userDashboard")} (${userRole})`}
+        {userRole === "admin"
+          ? t("adminDashboard")
+          : `${t("userDashboard")} (${userRole})`}
       </Typography>
 
       {/* Logout Button */}
       <Button variant="contained" color="secondary" onClick={onLogout}>
         {t("logout")}
       </Button>
+
+      {/* Filter Controls (Dropdowns styled like the search view) */}
+      <TextField
+        select
+        label={t("category")}
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        variant="outlined"
+        fullWidth
+        margin="normal"
+      >
+        <MenuItem value="">
+          <em>{t("allCategories")}</em>
+        </MenuItem>
+        <MenuItem value="Professional">{t("professional")}</MenuItem>
+        <MenuItem value="Academic">{t("academic")}</MenuItem>
+        <MenuItem value="Appointments">{t("appointments")}</MenuItem>
+      </TextField>
+
+      <TextField
+        select
+        label={t("priority")}
+        value={selectedPriority}
+        onChange={(e) => setSelectedPriority(e.target.value)}
+        variant="outlined"
+        fullWidth
+        margin="normal"
+      >
+        <MenuItem value="">
+          <em>{t("allPriorities")}</em>
+        </MenuItem>
+        <MenuItem value="Red">{t("red")}</MenuItem>
+        <MenuItem value="Green">{t("green")}</MenuItem>
+        <MenuItem value="Gray">{t("gray")}</MenuItem>
+      </TextField>
 
       {/* Task Form with userRole passed as a prop */}
       <TaskForm

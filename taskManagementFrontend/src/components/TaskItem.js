@@ -16,9 +16,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
   const [notificationMessage, setNotificationMessage] = useState("");
   const formattedDueDate = task.dueDate ? task.dueDate.split("T")[0] : t("na");
 
-// Function to determine the owner of the task
   const getTaskOwner = () => {
-    
     if (task.userName) {
       return task.userName;
     }
@@ -35,7 +33,6 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
     return t("unknownUser");
   };
 
-  // Save PDF: Saves the file locally
   const saveTaskAsPDF = () => {
     try {
       const doc = new jsPDF();
@@ -44,6 +41,8 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
       doc.text(`${t("pdfDueDate")} ${formattedDueDate}`, 10, 40);
       doc.text(`${t("pdfStatus")} ${task.status}`, 10, 50);
       doc.text(`${t("pdfUserName")}: ${getTaskOwner()}`, 10, 60);
+      doc.text(`${t("category")}: ${task.category}`, 10, 70);
+      doc.text(`${t("priority")}: ${task.priority}`, 10, 80);
       doc.save(`${task.title}.pdf`);
       setNotificationMessage(t("pdfSavedSuccess"));
       setOpenNotification(true);
@@ -66,18 +65,25 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
     >
       <h3>{task.title}</h3>
       <p>
-        <strong>{t("pdfDescription")}</strong> {task.description}
+        <strong>{t("pdfDescription")}:</strong> {task.description}
       </p>
       <p>
-        <strong>{t("pdfDueDate")}</strong> {formattedDueDate}
+        <strong>{t("pdfDueDate")}:</strong> {formattedDueDate}
       </p>
       <p>
-        <strong>{t("pdfStatus")}</strong>{" "}
+        <strong>{t("pdfStatus")}:</strong>{" "}
         {task.status === "Pending" ? (
           <span style={{ color: "orange" }}>{t("pending")}</span>
         ) : (
           <span style={{ color: "green" }}>{t("completed")}</span>
         )}
+      </p>
+      {/* New fields display: Category and Priority */}
+      <p>
+        <strong>{t("category")}:</strong> {task.category}
+      </p>
+      <p>
+        <strong>{t("priority")}:</strong> {task.priority}
       </p>
       <div style={{ display: "flex", gap: "10px" }}>
         {/* Edit button */}
