@@ -33,6 +33,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
     return t("unknownUser");
   };
 
+  // Save task details as PDF
   const saveTaskAsPDF = () => {
     try {
       const doc = new jsPDF();
@@ -43,6 +44,7 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
       doc.text(`${t("pdfUserName")}: ${getTaskOwner()}`, 10, 60);
       doc.text(`${t("category")}: ${task.category}`, 10, 70);
       doc.text(`${t("priority")}: ${task.priority}`, 10, 80);
+      doc.text(`${t("taskIdentifier")}: ${task.taskIdentifier}`, 10, 90);
       doc.save(`${task.title}.pdf`);
       setNotificationMessage(t("pdfSavedSuccess"));
       setOpenNotification(true);
@@ -63,7 +65,23 @@ const TaskItem = ({ task, onEdit, onDelete, onStatusChange, onShareTask, userRol
         borderRadius: "5px",
       }}
     >
-      <h3>{task.title}</h3>
+      {/* Display task title along with TaskIdentifier as a badge */}
+      <h3>
+        {task.title}{" "}
+        <span
+          className="task-identifier-badge"
+          style={{
+            backgroundColor: "#e0e0e0",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            fontSize: "0.8em",
+            fontWeight: "bold",
+            marginLeft: "10px",
+          }}
+        >
+          {task.taskIdentifier}
+        </span>
+      </h3>
       <p>
         <strong>{t("pdfDescription")}:</strong> {task.description}
       </p>
