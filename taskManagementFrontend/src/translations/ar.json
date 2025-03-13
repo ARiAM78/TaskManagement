@@ -83,5 +83,6 @@
   "allPriorities": "جميع الأولويات",
   "noTasksForPriority": "لا يوجد مهمة لهذه الأولوية",
   "none": "لا شيء",
-  "allTasks": "جميع المهام"
+  "allTasks": "جميع المهام",
+  "taskIdentifier": "معرف المهمة"
 }
